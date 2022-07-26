@@ -79,7 +79,7 @@ void Scene3D_append(Scene3D* scene, Object3D* object){
         scene->objects = realloc(scene->objects, new_amount );
         scene->size = scene->size*2;
     }
-    scene->objects[scene->count] = malloc(sizeof(object)); //allocate
+    //scene->objects[scene->count] = malloc(sizeof(object)); //allocate
     scene->objects[scene->count] = object; //assign
     scene->count++;
     
