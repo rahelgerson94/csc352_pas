@@ -36,11 +36,6 @@ int main(){
     Scene3D_append(pyramid_s, pyramid_o1);
     Scene3D_append(pyramid_s, pyramid_o2);
     Scene3D_destroy(pyramid_s);
-    
-    free(pyramid_o0);
-    free(pyramid_o1);
-    free(pyramid_o2);
-    free(pyramid_s);
 #endif
     //Scene3D_write_stl_text(star, "star.stl");
 
