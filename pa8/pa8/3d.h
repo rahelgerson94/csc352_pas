@@ -162,7 +162,7 @@ void Object3D_destroy_helper(Triangle3DNode* cur);
 Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle);
 
 void Coordinate3D_print(Coordinate3D coord);
-void Object3D_update_coords(double length, double width, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
+void Object3D_update_coords(double length, double width, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
 void Object3D_print_helper(Triangle3DNode* cur, int level);
 void Object3D_print(Object3D* obj);
 

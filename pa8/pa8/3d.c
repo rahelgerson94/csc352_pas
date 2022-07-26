@@ -10,7 +10,7 @@
 //#define db_pyramid
 #define db_quad
 #define db
-
+#define db_destroy
 /*
  * This function allocates space for a new Scene3D object on the heap,
  * initializes the values to defaults as necessary, and returns a pointer to
@@ -34,6 +34,9 @@ void Scene3D_destroy(Scene3D* scene){
     }
 }
 void Object3D_destroy(Object3D* obj){
+#ifdef db_destroy
+    print_db_fct("Object3D_destroy");
+#endif
     Object3D_destroy_helper(obj->root);
 }
 void Object3D_destroy_helper(Triangle3DNode* cur){
@@ -88,14 +91,61 @@ Object3D* Object3D_create_pyramid(
     print_db_fct("Object3D_create_pyramid");
 #endif
     Coordinate3D origin,
-    double width, double height, char* orientation){
+    double w, double h, char* orientation){
     Object3D* pyramid = malloc(8*(sizeof(Triangle3DNode)));
     pyramid->count = 0;
     pyramid->root = NULL;
     
     Coordinate3D a,b,c,d;
-    Object3D_update_coords(width, width, &a, &b, &c, &d);
+    Object3D_update_coords(w, w, origin, &a, &b, &c, &d);
     Object3D_append_quadrilateral(pyramid, a,b,c,d);
+    /* now, append the sides*/
+    double x0 = origin.x;
+    double y0 = origin.y;
+    double z0 = origin.z;
+    
+    if (strcmp(orientation, "up") == 0){
+        //up triangle
+        a = (Coordinate3D){x0, y0, h};
+        b = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
+        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
+        Triangle3D up = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, up );
+        
+        //right triangle
+        a = (Coordinate3D){x0, y0, h};
+        b = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
+        Triangle3D right = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, right );
+        
+        //down triangle
+        a = (Coordinate3D){x0, y0, h};
+        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
+        Triangle3D down = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, down );
+        
+        //left triangle
+        a = (Coordinate3D){x0, y0, h};
+        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
+        Triangle3D left = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, left);
+    }//end up case
+    else if (strcmp(orientation, "right") == 0){
+        
+
+    } //right
+    else if (strcmp(orientation, "down") == 0){
+        
+   
+    } //down
+    else if (strcmp(orientation, "left") == 0){
+        
+   
+    } //left
+    
 #ifdef db_pyr
     Object3D_print(pyramid);
 #endif
@@ -208,11 +258,14 @@ void Object3D_append_quadrilateral(
 
 /* given a length l and width w, determine the 4 cordinates a,b, c,d
  in 3d space of a quadrilateral */
-void Object3D_update_coords(double length, double width, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
-    *a = (Coordinate3D){-width/2, length/2, 0};
-    *b = (Coordinate3D){width/2, length/2, 0};
-    *c = (Coordinate3D){width/2, -length/2, 0};
-    *d = (Coordinate3D){-width/2, -length/2, 0};
+void Object3D_update_coords(double length, double width, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
+    double x = origin.x;
+    double y = origin.y;
+    double z = origin.z;
+    *a = (Coordinate3D){x - width/2, y + length/2, z};
+    *b = (Coordinate3D){x + width/2, y + length/2, z};
+    *c = (Coordinate3D){x + width/2, y - length/2, z};
+    *d = (Coordinate3D){x - width/2, y - length/2, z};
 }
 
 Triangle3DNode* Triangle3DNode_create_node1(Coordinate3D a,  Coordinate3D b, Coordinate3D c){
