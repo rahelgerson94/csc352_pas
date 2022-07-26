@@ -4,13 +4,14 @@
 //
 //  Created by Rahel Gerson on 7/25/22.
 //
-
+#include <math.h>>
 #include "3d.h"
 //#define db0 //db for basis funcs
 //#define db_pyramid
-#define db_quad
-#define db
-#define db_destroy
+//#define db_quad
+//#define db_o_append
+#define db_o_destroy
+#define db_s_append
 /*
  * This function allocates space for a new Scene3D object on the heap,
  * initializes the values to defaults as necessary, and returns a pointer to
@@ -57,7 +58,28 @@ void Object3D_destroy_helper(Triangle3DNode* cur){
  *     scene: The scene to have an object appended to
  *     object: The object to append to this scene
  */
-void Scene3D_append(Scene3D* scene, Object3D* object){}
+void Scene3D_append(Scene3D* scene, Object3D* object){
+    print_db_fct("Scene3D_append");
+    if (scene->objects == NULL){
+        scene->objects = malloc(sizeof(Object3D*)*2);
+        scene->size = 2;
+        scene->objects[0] = malloc(sizeof(object));
+        scene->objects[1] = NULL;
+    }
+    else{
+        long idx = log2(scene->size);
+        scene->objects = realloc(scene->objects, (scene->size)*2);
+        scene->objects[idx] = malloc(sizeof(object));
+        scene->size = scene->size*2;
+    }
+#ifdef db_s_append
+    printf("Scene3D_append()\n");
+    for (int i = 0; i <= log2(scene->size/2); i++){
+        printf("objects[%d] : %p\n", i, scene->objects[i]);
+    }
+#endif
+    
+}
 
 /*
  * Write every shape from the Scene3D to the file with file_name using the STL
@@ -179,7 +201,7 @@ void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
         cur->next->triangle.b = triangle.b;
         cur->next->triangle.c = triangle.c;
         cur->next->next = NULL;
-#ifdef db
+#ifdef db_o_append
         printf("cur       = %p\n", cur);
         printf("cur->next = %p\n", cur->next);
         print_down_arrow();
