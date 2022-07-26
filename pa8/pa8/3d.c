@@ -30,7 +30,7 @@ Scene3D* Scene3D_create(){
  *     scene: The scene to destroy
  */
 void Scene3D_destroy(Scene3D* scene){
-    for (int i = 0; i < scene->size; i++){
+    for (int i = 0; i < scene->count; i++){
         Object3D_destroy(scene->objects[i]);
     }
 }
@@ -63,18 +63,19 @@ void Scene3D_append(Scene3D* scene, Object3D* object){
     if (scene->objects == NULL){
         scene->objects = malloc(sizeof(Object3D*)*2);
         scene->size = 2;
-        scene->objects[0] = malloc(sizeof(object));
-        scene->objects[1] = NULL;
     }
-    else{
-        long idx = (int)log2(scene->size);
-        scene->objects = realloc(scene->objects, (scene->size)*2);
-        scene->objects[idx] = malloc(sizeof(object));
+    if (scene->count == scene->size){
+        unsigned int new_amount = (scene->size*2)*(sizeof(Object3D*));
+        scene->objects = realloc(scene->objects, new_amount );
         scene->size = scene->size*2;
     }
+    scene->objects[scene->count] = malloc(sizeof(object)); //allocate
+    scene->objects[scene->count] = object; //assign
+    scene->count++;
+    
 #ifdef db_s_append
     printf("Scene3D_append()\n");
-    for (int i = 0; i <= (int)log2(scene->size/2); i++){
+    for (int i = 0; i < scene->count; i++){
         printf("objects[%d] : %p\n", i, scene->objects[i]);
     }
 #endif
