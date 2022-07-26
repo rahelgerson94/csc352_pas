@@ -30,7 +30,7 @@ Scene3D* Scene3D_create(){
  *     scene: The scene to destroy
  */
 void Scene3D_destroy(Scene3D* scene){
-    for (int i = 0; i < scene->count; i++){
+    for (int i = 0; i < scene->size; i++){
         Object3D_destroy(scene->objects[i]);
     }
 }
