@@ -38,6 +38,7 @@ void Object3D_destroy(Object3D* obj){
     print_db_fct("Object3D_destroy");
 #endif
     Object3D_destroy_helper(obj->root);
+    free(obj);
 }
 void Object3D_destroy_helper(Triangle3DNode* cur){
     if (cur == NULL)
