@@ -45,7 +45,7 @@ void Object3D_destroy(Object3D* obj){
     print_db_fct("Object3D_destroy");
 #endif
     Object3D_destroy_helper(obj->root);
-    //free(obj);
+    free(obj);
 }
 
 /*frees each node in an object's linked list*/
