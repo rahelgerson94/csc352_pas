@@ -1,0 +1,10 @@
+.DS_*
+*/.DS_*
+*/*.xcodeproj
+*/*.o
+*/*.dSYM
+*.o
+*.dSYM
+*/game
+*/*.zip
+*.zip
