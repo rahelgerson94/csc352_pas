@@ -38,6 +38,7 @@ void Scene3D_destroy(Scene3D* scene){
         Object3D_destroy(scene->objects[i]);
     }
     free(scene->objects);
+    free(scene);
 }
 void Object3D_destroy(Object3D* obj){
 #ifdef db_destroy
