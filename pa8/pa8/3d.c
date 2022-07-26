@@ -32,11 +32,12 @@ Scene3D* Scene3D_create(){
 void Scene3D_destroy(Scene3D* scene){
     print_db_fct("Scene3D_destroy");
     for (int i = 0; i < scene->count; i++){
-#ifdef db_s_destroy
-    printf("Scene3D_destroy(): about to destroy scene->object[%d], address: %p\n", i, scene->objects[i]);
-#endif
+        #ifdef db_s_destroy
+            printf("Scene3D_destroy(): about to destroy scene->object[%d], address: %p\n", i, scene->objects[i]);
+        #endif
         Object3D_destroy(scene->objects[i]);
     }
+    free(scene->objects);
 }
 void Object3D_destroy(Object3D* obj){
 #ifdef db_destroy
