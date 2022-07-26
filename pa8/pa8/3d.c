@@ -10,6 +10,7 @@
 //#define db_quad
 //#define db_o_append
 #define db_o_destroy
+#define db_s_destroy
 #define db_s_append
 /*
  * This function allocates space for a new Scene3D object on the heap,
@@ -29,7 +30,11 @@ Scene3D* Scene3D_create(){
  *     scene: The scene to destroy
  */
 void Scene3D_destroy(Scene3D* scene){
+    print_db_fct("Scene3D_destroy");
     for (int i = 0; i < scene->count; i++){
+#ifdef db_s_destroy
+    printf("Scene3D_destroy(): about to destroy scene->object[%d], address: %p\n", i, scene->objects[i]);
+#endif
         Object3D_destroy(scene->objects[i]);
     }
 }
@@ -41,8 +46,10 @@ void Object3D_destroy(Object3D* obj){
     free(obj);
 }
 void Object3D_destroy_helper(Triangle3DNode* cur){
-    if (cur == NULL)
+    if (cur->next == NULL){
+        free(cur);
         return;
+    }
     else {
         Triangle3DNode* temp = cur->next;
         free(cur);

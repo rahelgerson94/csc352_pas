@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include "3d.h"
-#define test1
+//#define test1
 //#define test_destroy
 #define test_scene_append
 
@@ -29,9 +29,10 @@ int main(){
 #ifdef test_scene_append
     Scene3D* pyramid_s = Scene3D_create();
     Coordinate3D o = {0,0,0};
-    Object3D* pyramid_o = Object3D_create_pyramid(o, 20.0, 40.0, "up");
-    Scene3D_append(pyramid_s, pyramid_o);
-    Scene3D_append(pyramid_s, pyramid_o);
+    Object3D* pyramid_o0 = Object3D_create_pyramid(o, 20.0, 40.0, "up");
+    Object3D* pyramid_o1 = Object3D_create_pyramid(o, 20.0, 40.0, "up");
+    Scene3D_append(pyramid_s, pyramid_o0);
+    Scene3D_append(pyramid_s, pyramid_o1);
     Scene3D_destroy(pyramid_s);
 #endif
     //Scene3D_write_stl_text(star, "star.stl");
