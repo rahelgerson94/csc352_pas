@@ -4,7 +4,6 @@
 //
 //  Created by Rahel Gerson on 7/25/22.
 //
-#include <math.h>
 #include "3d.h"
 //#define db0 //db for basis funcs
 //#define db_pyramid
@@ -341,8 +340,4 @@ void print_spaces(int num){
 }
 void print_db_fct(char* name){
     printf("--------------- %s() ---------------\n", name);
-}
-
-double log2( double n ){
-    return log( n ) / log( 2 ); // log(n)/log(2) is log2.
 }
