@@ -170,4 +170,5 @@ void Object3D_print(Object3D* obj);
 void print_down_arrow();
 void print_spaces(int num);
 void print_db_fct(char* name);
+double log2( double n );
 #endif

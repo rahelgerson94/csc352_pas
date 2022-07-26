@@ -67,14 +67,14 @@ void Scene3D_append(Scene3D* scene, Object3D* object){
         scene->objects[1] = NULL;
     }
     else{
-        long idx = log2(scene->size);
+        long idx = (int)log2(scene->size);
         scene->objects = realloc(scene->objects, (scene->size)*2);
         scene->objects[idx] = malloc(sizeof(object));
         scene->size = scene->size*2;
     }
 #ifdef db_s_append
     printf("Scene3D_append()\n");
-    for (int i = 0; i <= log2(scene->size/2); i++){
+    for (int i = 0; i <= (int)log2(scene->size/2); i++){
         printf("objects[%d] : %p\n", i, scene->objects[i]);
     }
 #endif
@@ -340,4 +340,8 @@ void print_spaces(int num){
 }
 void print_db_fct(char* name){
     printf("--------------- %s() ---------------\n", name);
+}
+
+double log2( double n ){
+    return log( n ) / log( 2 ); // log(n)/log(2) is log2.
 }
