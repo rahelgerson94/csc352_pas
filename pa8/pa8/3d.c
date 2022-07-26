@@ -4,7 +4,7 @@
 //
 //  Created by Rahel Gerson on 7/25/22.
 //
-#include <math.h>>
+#include <math.h>
 #include "3d.h"
 //#define db0 //db for basis funcs
 //#define db_pyramid
