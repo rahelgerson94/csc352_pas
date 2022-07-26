@@ -35,7 +35,8 @@ void Scene3D_destroy(Scene3D* scene){
         #ifdef db_s_destroy
             printf("Scene3D_destroy(): about to destroy scene->object[%d], address: %p\n", i, scene->objects[i]);
         #endif
-        Object3D_destroy(scene->objects[i]);
+        Object3D_destroy(scene->objects[i]); //
+        free(scene->objects[i]);
     }
     free(scene->objects);
 }
@@ -44,8 +45,10 @@ void Object3D_destroy(Object3D* obj){
     print_db_fct("Object3D_destroy");
 #endif
     Object3D_destroy_helper(obj->root);
-    free(obj);
+    //free(obj);
 }
+
+/*frees each node in an object's linked list*/
 void Object3D_destroy_helper(Triangle3DNode* cur){
     if (cur->next == NULL){
         free(cur);
