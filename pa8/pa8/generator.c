@@ -33,8 +33,9 @@ int main(){
     Object3D* pyramid_o1 = Object3D_create_pyramid(o, 20.0, 40.0, "up");
     Object3D* pyramid_o2 = Object3D_create_pyramid(o, 20.0, 40.0, "up");
     Scene3D_append(pyramid_s, pyramid_o0);
-    Scene3D_append(pyramid_s, pyramid_o1);
-    Scene3D_append(pyramid_s, pyramid_o2);
+    //Scene3D_append(pyramid_s, pyramid_o1);
+    //Scene3D_append(pyramid_s, pyramid_o2);
+    Scene3D_print(pyramid_s);
     Scene3D_destroy(pyramid_s);
 #endif
     //Scene3D_write_stl_text(star, "star.stl");

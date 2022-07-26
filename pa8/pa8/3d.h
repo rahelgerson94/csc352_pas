@@ -161,14 +161,16 @@ void Object3D_destroy(Object3D* obj);
 void Object3D_destroy_helper(Triangle3DNode* cur);
 Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle);
 
-void Coordinate3D_print(Coordinate3D coord);
+void Coordinate3D_db_print(Coordinate3D coord);
 void Object3D_update_coords(double length, double width, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
+void Object3D_db_print_helper(Triangle3DNode* cur, int level);
+void Object3D_db_print(Object3D* obj);
+void Scene3D_print(Scene3D* scene);
+void Coordinate3D_print(Coordinate3D coord);
 void Object3D_print_helper(Triangle3DNode* cur, int level);
 void Object3D_print(Object3D* obj);
-
 
 void print_down_arrow();
 void print_spaces(int num);
 void print_db_fct(char* name);
-double log2( double n );
 #endif

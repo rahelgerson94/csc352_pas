@@ -172,8 +172,33 @@ Object3D* Object3D_create_pyramid(
 
     } //right
     else if (strcmp(orientation, "down") == 0){
+        //up triangle
+        a = (Coordinate3D){x0, y0, -h};
+        b = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
+        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
+        Triangle3D up = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, up );
         
-   
+        //right triangle
+        a = (Coordinate3D){x0, y0, -h};
+        b = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
+        Triangle3D right = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, right );
+        
+        //down triangle
+        a = (Coordinate3D){x0, y0, -h};
+        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
+        Triangle3D down = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, down );
+        
+        //left triangle
+        a = (Coordinate3D){x0, y0, -h};
+        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
+        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
+        Triangle3D left = (Triangle3D){a,b,c};
+        Object3D_append_triangle(pyramid, left);
     } //down
     else if (strcmp(orientation, "left") == 0){
         
@@ -181,7 +206,7 @@ Object3D* Object3D_create_pyramid(
     } //left
     
 #ifdef db_pyr
-    Object3D_print(pyramid);
+    Object3D_db_print(pyramid);
 #endif
     return pyramid;
 }
@@ -246,9 +271,9 @@ void Object3D_append_triangle(Object3D* this, Triangle3D triangle){
     this->count++;
 #ifdef db0
     print_db_fct("Object3D_append_triangle");
-    printf("coord a: ");;Coordinate3D_print(this->root->triangle.a);
-    printf("coord b: ");Coordinate3D_print(this->root->triangle.b);
-    printf("coord c: ");Coordinate3D_print(this->root->triangle.c);
+    printf("coord a: ");;Coordinate3D_db_print(this->root->triangle.a);
+    printf("coord b: ");Coordinate3D_db_print(this->root->triangle.b);
+    printf("coord c: ");Coordinate3D_db_print(this->root->triangle.c);
 #endif
 }
 
@@ -261,9 +286,9 @@ Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle){
     this->triangle.c = triangle.c;
 #ifdef db
     print_db_fct("Triangle3DNode_create_node2");
-    Coordinate3D_print(triangle.a);
-    Coordinate3D_print(triangle.b);
-    Coordinate3D_print(triangle.c);
+    Coordinate3D_db_print(triangle.a);
+    Coordinate3D_db_print(triangle.b);
+    Coordinate3D_db_print(triangle.c);
 #endif
     this->next = NULL;
     return this;
@@ -286,7 +311,7 @@ void Object3D_append_quadrilateral(
     Object3D_append_triangle(object, triangle_4);
 #ifdef db_quad
    
-    Object3D_print(object);
+    Object3D_db_print(object);
 #endif
 }
 
@@ -311,30 +336,30 @@ Triangle3DNode* Triangle3DNode_create_node1(Coordinate3D a,  Coordinate3D b, Coo
 
 
 
-void Coordinate3D_print(Coordinate3D coord){
+void Coordinate3D_db_print(Coordinate3D coord){
     printf("(%.2f, %.2f, %.2f)", coord.x, coord.y, coord.z);
     }
 
-void Object3D_print(Object3D* obj){
+void Object3D_db_print(Object3D* obj){
     if (obj->root == NULL)
         printf("[empty]");
     else{
-        Object3D_print_helper(obj->root, 0);
+        Object3D_db_print_helper(obj->root, 0);
     }
 }
-void Object3D_print_helper(Triangle3DNode* cur, int level){
+void Object3D_db_print_helper(Triangle3DNode* cur, int level){
     if (cur == NULL){
         return;
     }
     else{
         printf("triangle %d :", level);
         
-        print_spaces(2);Coordinate3D_print(cur->triangle.a);
-        print_spaces(2);Coordinate3D_print(cur->triangle.b);
-        print_spaces(2);Coordinate3D_print(cur->triangle.c);
+        print_spaces(2);Coordinate3D_db_print(cur->triangle.a);
+        print_spaces(2);Coordinate3D_db_print(cur->triangle.b);
+        print_spaces(2);Coordinate3D_db_print(cur->triangle.c);
         printf("\n");
         print_down_arrow();
-        Object3D_print_helper(cur->next, level+1);
+        Object3D_db_print_helper(cur->next, level+1);
         
     }
 }
@@ -351,4 +376,41 @@ void print_spaces(int num){
 }
 void print_db_fct(char* name){
     printf("--------------- %s() ---------------\n", name);
+}
+
+
+
+void Coordinate3D_print(Coordinate3D coord){
+    printf("%.2f %.2f %.2f\n", coord.x, coord.y, coord.z);
+    }
+void Scene3D_print(Scene3D* scene){
+    printf("scene\n");
+    for (int i = 0; i < scene->count; i++){
+        Object3D_print(scene->objects[i]);
+    }
+    printf("endsolid scene\n");
+}
+
+void Object3D_print(Object3D* obj){
+    if (obj->root == NULL)
+        return;
+    else{
+        Object3D_print_helper(obj->root, 0);
+    }
+}
+void Object3D_print_helper(Triangle3DNode* cur, int level){
+    if (cur == NULL){
+        return;
+    }
+    else{
+        print_spaces(1); printf("facet normal 0.0 0.0 0.0\n");
+        print_spaces(2); printf("outer loop\n");
+        print_spaces(3);Coordinate3D_print(cur->triangle.a);
+        print_spaces(3);Coordinate3D_print(cur->triangle.b);
+        print_spaces(3);Coordinate3D_print(cur->triangle.c);
+        print_spaces(2); printf("endloop\n");
+        print_spaces(1); printf("end facet\n");
+        Object3D_print_helper(cur->next, level+1);
+        
+    }
 }
