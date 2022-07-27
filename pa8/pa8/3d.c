@@ -126,44 +126,29 @@ Object3D* Object3D_create_pyramid(
     Object3D_update_coords(w, w, origin, &a, &b, &c, &d);
     Object3D_append_quadrilateral(pyramid, a,b,c,d);
     /* now, append the sides*/
-    double x0 = origin.x;
-    double y0 = origin.y;
-    double z0 = origin.z;
-    
+    Coordinate3D tip;
     if (strcmp(orientation, "up") == 0){
-        
-        Coordinate3D tip;
         Object3D_coord_shift(origin, 'z', h, &tip);
-        //up triangle
         
+        //front
+        Triangle3D front = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, front );
         
-        Triangle3D up = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, up );
-        
-        //right triangle
-        a = (Coordinate3D){x0, y0, h};
-        b = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
-        Triangle3D right = (Triangle3D){a,b,c};
+        //right
+        Triangle3D right = (Triangle3D){b,c,tip};
         Object3D_append_triangle(pyramid, right );
         
-        //down triangle
-        a = (Coordinate3D){x0, y0, h};
-        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
-        Triangle3D down = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, down );
+        //back
+        Triangle3D back = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, back );
         
-        //left triangle
-        a = (Coordinate3D){x0, y0, h};
-        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
-        Triangle3D left = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, left);
+        //left
+        Triangle3D left = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, left );
     }//end up case
     
     else if (strcmp(orientation, "right") == 0){ //x-axis
-        Coordinate3D tip = (Coordinate3D){x0 + h, y0 + (w/2), z0-(w/2)};
+        Object3D_coord_shift(origin, 'x', h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -182,36 +167,26 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, back);
     } //right
     else if (strcmp(orientation, "down") == 0){
-        //up triangle
-        a = (Coordinate3D){x0, y0, -h};
-        b = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
-        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
-        Triangle3D up = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, up );
+        Object3D_coord_shift(origin, 'z', -h, &tip);
         
-        //right triangle
-        a = (Coordinate3D){x0, y0, -h};
-        b = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
-        Triangle3D right = (Triangle3D){a,b,c};
+        //front
+        Triangle3D front = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, front );
+        
+        //right
+        Triangle3D right = (Triangle3D){b,c,tip};
         Object3D_append_triangle(pyramid, right );
         
-        //down triangle
-        a = (Coordinate3D){x0, y0, -h};
-        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 + (w/2), y0 - (w/2), z0};
-        Triangle3D down = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, down );
+        //back
+        Triangle3D back = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, back );
         
-        //left triangle
-        a = (Coordinate3D){x0, y0, -h};
-        b = (Coordinate3D){x0 - (w/2), y0 - (w/2), z0};
-        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
-        Triangle3D left = (Triangle3D){a,b,c};
-        Object3D_append_triangle(pyramid, left);
+        //left
+        Triangle3D left = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, left );
     } //down
     else if (strcmp(orientation, "left") == 0){
-        Coordinate3D tip = (Coordinate3D){x0 - h, y0 + (w/2), z0-(w/2)};
+        Object3D_coord_shift(origin, 'x', -h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -228,10 +203,9 @@ Object3D* Object3D_create_pyramid(
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
         Object3D_append_triangle(pyramid, back);
-   
     } //left
     else if (strcmp(orientation, "forward") == 0){
-        Coordinate3D tip = (Coordinate3D){x0 + (w/2), y0 + h, z0-(w/2)};
+        Object3D_coord_shift(origin, 'y', h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -252,7 +226,7 @@ Object3D* Object3D_create_pyramid(
     } //forward
     
     else if (strcmp(orientation, "backward") == 0){
-        Coordinate3D tip = (Coordinate3D){x0 - h, y0 + (w/2), z0-(w/2)};
+        Object3D_coord_shift(origin, 'y', -h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -269,7 +243,6 @@ Object3D* Object3D_create_pyramid(
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
         Object3D_append_triangle(pyramid, back);
-   
     } //backward
     else{
         printf("enter a valid orientation\n");
