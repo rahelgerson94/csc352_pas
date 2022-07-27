@@ -7,10 +7,10 @@
 
 #include <stdio.h>
 #include "3d.h"
-#define test_star
-#define test_destroy
-#define test_scene_append
-#define test_cuboid
+//#define test_star
+//#define test_destroy
+//#define test_scene_append
+//#define test_cuboid
 #define test_pyramid_valgrind
 //#define test_quad
 int main(){
@@ -59,7 +59,7 @@ int main(){
     Object3D* pyramid_o32 = Object3D_create_pyramid(o, 6, 5, "up");
     Scene3D_append(pyramid_s2, pyramid_o32);
     Scene3D_write_stl_text(cuboid, "out.stl");
-    free(pyramid_s);
+    Scene3D_destroy(pyramid_s);
     
 #endif
 
