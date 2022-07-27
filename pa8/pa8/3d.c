@@ -128,11 +128,12 @@ Object3D* Object3D_create_pyramid(
     pyramid->root = NULL;
     
     Coordinate3D a,b,c,d;
-    Object3D_update_coords(w, w, origin, &a, &b, &c, &d);
-    Object3D_append_quadrilateral(pyramid, a,b,c,d);
+    
     /* now, append the sides*/
     Coordinate3D tip;
     if (strcmp(orientation, "up") == 0){
+        Object3D_update_coords(w, w, origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
         Object3D_coord_shift(origin, 'z', h, &tip);
         
         //front
@@ -529,10 +530,11 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
     /* check if file already exists, if it does remove it*/
     if (exists(file_name)){
-        if (remove(file_name) == 0)
-              printf("%s deleted successfully\n", file_name);
-           else
-              printf("Unable to delete %s\n", file_name);
+        remove(file_name);
+//        if (remove(file_name) == 0)
+//              printf("%s deleted successfully\n", file_name);
+//        else
+//          printf("Unable to delete %s\n", file_name);
     }
     FILE* file = fopen(file_name, "a+");
     if (file == NULL) {

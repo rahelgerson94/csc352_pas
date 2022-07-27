@@ -56,9 +56,9 @@ int main(){
     
 #ifdef test_pyramid_valgrind
     Scene3D* pyramid_s = Scene3D_create();
-    Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "up");
+    Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "right");
     Scene3D_append(pyramid_s, pyramid_o);
-    Scene3D_write_stl_text(pyramid_s, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/one_pyramid.stl");
+    Scene3D_write_stl_text(pyramid_s, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/pyramid_right.stl");
     Scene3D_destroy(pyramid_s);
     
 #endif
