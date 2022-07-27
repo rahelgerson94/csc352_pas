@@ -149,6 +149,7 @@ Object3D* Object3D_create_pyramid(
 Object3D* Object3D_create_cuboid(
     Coordinate3D origin,
     double width, double height, double depth);
+void Object3D_coord_shift(Coordinate3D in, char axis, double shamt, Coordinate3D* out);
 void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D* out_);
 /*
  * This function should append a triangle to the Linked list of Triangle3DNode's
@@ -173,7 +174,6 @@ void Scene3D_print(Scene3D* scene);
 void Coordinate3D_print(Coordinate3D coord);
 void Object3D_print_helper(Triangle3DNode* cur, int level);
 void Object3D_print(Object3D* obj);
-
 void print_down_arrow();
 void print_spaces(int num);
 void print_db_fct(char* name);

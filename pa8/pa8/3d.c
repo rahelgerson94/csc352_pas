@@ -131,10 +131,12 @@ Object3D* Object3D_create_pyramid(
     double z0 = origin.z;
     
     if (strcmp(orientation, "up") == 0){
+        
+        Coordinate3D tip;
+        Object3D_coord_shift(origin, 'z', h, &tip);
         //up triangle
-        a = (Coordinate3D){x0, y0, h};
-        b = (Coordinate3D){x0 + (w/2), y0 + (w/2), z0};
-        c = (Coordinate3D){x0 - (w/2), y0 + (w/2), z0};
+        
+        
         Triangle3D up = (Triangle3D){a,b,c};
         Object3D_append_triangle(pyramid, up );
         
@@ -429,6 +431,27 @@ void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D
     (*out).y = in.y;
     (*out).z = in.z + depth;
 }
+
+void Object3D_coord_shift(Coordinate3D in, char axis, double shamt, Coordinate3D* out){
+    switch (axis){
+        case 'x':
+            (*out).x = in.x+ shamt;
+            (*out).y = in.y;
+            (*out).z = in.z;
+        break;
+        case 'y':
+            (*out).x = in.x;
+            (*out).y = in.y+shamt;
+            (*out).z = in.z;
+        break;
+        case 'z':
+            (*out).x = in.x;
+            (*out).y = in.y;
+            (*out).z = in.z + shamt;
+        break;
+    }
+}
+
 Triangle3DNode* Triangle3DNode_create_node1(Coordinate3D a,  Coordinate3D b, Coordinate3D c){
     Triangle3DNode* this = malloc(sizeof(Triangle3DNode));
     this->triangle = (Triangle3D){a,b,c};
