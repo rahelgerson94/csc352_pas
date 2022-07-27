@@ -109,6 +109,7 @@ void Scene3D_append(Scene3D* scene, Object3D* object);
  */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name);
 /* helper funcs for Scene3D_write_stl_text() */
+int exists(const char *fname);
 void Scene3D_write(Scene3D* scene, FILE* file);
 void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file);
 void Object3D_write(Object3D* obj, FILE* file);

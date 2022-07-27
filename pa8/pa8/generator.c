@@ -58,7 +58,7 @@ int main(){
     Scene3D* pyramid_s = Scene3D_create();
     Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "up");
     Scene3D_append(pyramid_s, pyramid_o);
-    Scene3D_write_stl_text(pyramid_s, "out.stl");
+    Scene3D_write_stl_text(pyramid_s, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/one_pyramid.stl");
     Scene3D_destroy(pyramid_s);
     
 #endif

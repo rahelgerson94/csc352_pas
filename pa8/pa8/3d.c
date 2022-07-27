@@ -527,8 +527,13 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
  *     file_name: The name of the file to write the STL data to
  */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
-    //FILE* file = fopen(file_name, "w+");
-    //fclose(file);
+    /* check if file already exists, if it does remove it*/
+    if (exists(file_name)){
+        if (remove(file_name) == 0)
+              printf("%s deleted successfully\n", file_name);
+           else
+              printf("Unable to delete %s\n", file_name);
+    }
     FILE* file = fopen(file_name, "a+");
     if (file == NULL) {
         fprintf(stderr, "Opening file failed with code %d.\n", errno);
@@ -575,4 +580,13 @@ void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
 }
 void Coordinate3D_write(FILE* file, Coordinate3D coord){
     fprintf(file, "%.5f %.5f %.5f\n", coord.x, coord.y, coord.z);
+}
+int exists(const char *fname){
+    FILE *file;
+    if ((file = fopen(fname, "r")))
+    {
+        fclose(file);
+        return 1;
+    }
+    return 0;
 }
