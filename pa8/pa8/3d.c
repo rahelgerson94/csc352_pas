@@ -10,9 +10,10 @@
 //#define db_pyramid
 //#define db_quad
 //#define db_o_append
-#define db_o_destroy
-#define db_s_destroy
-#define db_s_append
+//#define db_o_destroy
+//#define db_s_destroy
+//#define db_s_append
+#define write_gradescope
 /*
  * This function allocates space for a new Scene3D object on the heap,
  * initializes the values to defaults as necessary, and returns a pointer to
@@ -31,7 +32,9 @@ Scene3D* Scene3D_create(){
  *     scene: The scene to destroy
  */
 void Scene3D_destroy(Scene3D* scene){
+#ifdef db_s_destroy
     print_db_fct("Scene3D_destroy");
+#endif
     for (int i = 0; i < scene->count; i++){
         #ifdef db_s_destroy
             printf("Scene3D_destroy(): about to destroy scene->object[%d], address: %p\n", i, scene->objects[i]);
@@ -70,7 +73,9 @@ void Object3D_destroy_helper(Triangle3DNode* cur){
  *     object: The object to append to this scene
  */
 void Scene3D_append(Scene3D* scene, Object3D* object){
+#ifdef db_s_append
     print_db_fct("Scene3D_append");
+#endif
     if (scene->objects == NULL){
         scene->objects = malloc(sizeof(Object3D*)*2);
         scene->size = 2;
@@ -568,5 +573,5 @@ void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
     }
 }
 void Coordinate3D_write(FILE* file, Coordinate3D coord){
-    fprintf(file, "%.1f %.1f %.1f\n", coord.x, coord.y, coord.z);
+    fprintf(file, "%.5f %.5f %.5f\n", coord.x, coord.y, coord.z);
 }
