@@ -57,7 +57,7 @@ int main(){
 #ifdef test_pyramid_valgrind
     Scene3D* pyramid_s2 = Scene3D_create();
     Object3D* pyramid_o32 = Object3D_create_pyramid(o, 6, 5, "up");
-    Scene3D_append(pyramid_s2, pyramid_o0);
+    Scene3D_append(pyramid_s2, pyramid_o32);
     Scene3D_write_stl_text(cuboid, "out.stl");
     free(pyramid_s);
     
