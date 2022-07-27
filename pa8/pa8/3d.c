@@ -527,15 +527,16 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
  *     file_name: The name of the file to write the STL data to
  */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
-    FILE* file = fopen(file_name, "w+");
-    fclose(file);
-    fopen(file_name, "a+");
+    //FILE* file = fopen(file_name, "w+");
+    //fclose(file);
+    FILE* file = fopen(file_name, "a+");
     if (file == NULL) {
         fprintf(stderr, "Opening file failed with code %d.\n", errno);
     }
     Scene3D_write(scene, file);
     fclose(file);
 }
+
 
 void Scene3D_write(Scene3D* scene, FILE* file){
     fprintf(file, "solid scene\n");
