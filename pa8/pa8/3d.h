@@ -108,7 +108,11 @@ void Scene3D_append(Scene3D* scene, Object3D* object);
  *     file_name: The name of the file to write the STL data to
  */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name);
-
+/* helper funcs for Scene3D_write_stl_text() */
+void Scene3D_write(Scene3D* scene, FILE* file);
+void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file);
+void Object3D_write(Object3D* obj, FILE* file);
+void Coordinate3D_write(FILE* file, Coordinate3D coord);
 /*
  * This function should create a new Object3D on the heap and populate it with
  * a bunch of triangles to represent a pyramid in 3D space.
@@ -145,7 +149,7 @@ Object3D* Object3D_create_pyramid(
 Object3D* Object3D_create_cuboid(
     Coordinate3D origin,
     double width, double height, double depth);
-
+void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D* out_);
 /*
  * This function should append a triangle to the Linked list of Triangle3DNode's
  * within this object.

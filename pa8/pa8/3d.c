@@ -5,6 +5,7 @@
 //  Created by Rahel Gerson on 7/25/22.
 //
 #include "3d.h"
+#include <errno.h>
 //#define db0 //db for basis funcs
 //#define db_pyramid
 //#define db_quad
@@ -92,15 +93,6 @@ void Scene3D_append(Scene3D* scene, Object3D* object){
     
 }
 
-/*
- * Write every shape from the Scene3D to the file with file_name using the STL
- * text format. The function is responsible for opening, writing to, and
- * closing the file.
- *   Parameters:
- *     scene: The scene to write to the file
- *     file_name: The name of the file to write the STL data to
- */
-void Scene3D_write_stl_text(Scene3D* scene, char* file_name){}
 
 /*
  * This function should create a new Object3D on the heap and populate it with
@@ -167,9 +159,25 @@ Object3D* Object3D_create_pyramid(
         Triangle3D left = (Triangle3D){a,b,c};
         Object3D_append_triangle(pyramid, left);
     }//end up case
-    else if (strcmp(orientation, "right") == 0){
+    
+    else if (strcmp(orientation, "right") == 0){ //x-axis
+        Coordinate3D tip = (Coordinate3D){x0 + h, y0 + (w/2), z0-(w/2)};
+        //top
+        Triangle3D top = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, top );
         
-
+        //front
+        Triangle3D front = (Triangle3D){b,c,tip};
+        Object3D_append_triangle(pyramid, front );
+        
+        //bottom
+        
+        Triangle3D bottom = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, bottom );
+        
+        //back
+        Triangle3D back = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, back);
     } //right
     else if (strcmp(orientation, "down") == 0){
         //up triangle
@@ -201,9 +209,69 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, left);
     } //down
     else if (strcmp(orientation, "left") == 0){
+        Coordinate3D tip = (Coordinate3D){x0 - h, y0 + (w/2), z0-(w/2)};
+        //top
+        Triangle3D top = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, top );
         
+        //front
+        Triangle3D front = (Triangle3D){b,c,tip};
+        Object3D_append_triangle(pyramid, front );
+        
+        //bottom
+        
+        Triangle3D bottom = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, bottom );
+        
+        //back
+        Triangle3D back = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, back);
    
     } //left
+    else if (strcmp(orientation, "forward") == 0){
+        Coordinate3D tip = (Coordinate3D){x0 + (w/2), y0 + h, z0-(w/2)};
+        //top
+        Triangle3D top = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, top );
+        
+        //front
+        Triangle3D front = (Triangle3D){b,c,tip};
+        Object3D_append_triangle(pyramid, front );
+        
+        //bottom
+        
+        Triangle3D bottom = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, bottom );
+        
+        //back
+        Triangle3D back = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, back);
+   
+    } //forward
+    
+    else if (strcmp(orientation, "backward") == 0){
+        Coordinate3D tip = (Coordinate3D){x0 - h, y0 + (w/2), z0-(w/2)};
+        //top
+        Triangle3D top = (Triangle3D){a,b,tip};
+        Object3D_append_triangle(pyramid, top );
+        
+        //front
+        Triangle3D front = (Triangle3D){b,c,tip};
+        Object3D_append_triangle(pyramid, front );
+        
+        //bottom
+        
+        Triangle3D bottom = (Triangle3D){c,d,tip};
+        Object3D_append_triangle(pyramid, bottom );
+        
+        //back
+        Triangle3D back = (Triangle3D){a,d,tip};
+        Object3D_append_triangle(pyramid, back);
+   
+    } //backward
+    else{
+        printf("enter a valid orientation\n");
+    }
     
 #ifdef db_pyr
     Object3D_db_print(pyramid);
@@ -224,9 +292,39 @@ Object3D* Object3D_create_pyramid(
  */
 Object3D* Object3D_create_cuboid(
     Coordinate3D origin,
-    double width, double height, double depth){
-    Object3D* obj = malloc(sizeof(Object3D));
-    return obj;
+    double w, double h, double depth){
+    Object3D* cuboid = malloc(sizeof(Object3D));
+    cuboid->count = 0;
+    cuboid->root = NULL;
+    Coordinate3D a,b,c,d;
+    Object3D_update_coords(w, h, origin, &a, &b, &c, &d);
+    Object3D_append_quadrilateral(cuboid, a,b,c,d);
+    
+    /* now, append the sides*/
+    
+    //side1
+    Coordinate3D a1, b1;
+    Object3D_update_coord_for_depth(a, depth, &a1);
+    Object3D_update_coord_for_depth(b, depth, &b1);
+    Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
+    
+    //side2
+    Coordinate3D c1;
+    Object3D_update_coord_for_depth(c, depth, &c1);
+    Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
+    
+    //side3
+    Coordinate3D d1;
+    Object3D_update_coord_for_depth(d, depth, &d1);
+    Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
+    
+    //side4
+    Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
+    
+    //top
+    Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
+        
+    return cuboid;
 }
 
 
@@ -310,7 +408,6 @@ void Object3D_append_quadrilateral(
     Object3D_append_triangle(object, triangle_3);
     Object3D_append_triangle(object, triangle_4);
 #ifdef db_quad
-   
     Object3D_db_print(object);
 #endif
 }
@@ -326,7 +423,12 @@ void Object3D_update_coords(double length, double width, Coordinate3D origin, Co
     *c = (Coordinate3D){x + width/2, y - length/2, z};
     *d = (Coordinate3D){x - width/2, y - length/2, z};
 }
-
+//helper fct for cuboid
+void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D* out){
+    (*out).x = in.x;
+    (*out).y = in.y;
+    (*out).z = in.z + depth;
+}
 Triangle3DNode* Triangle3DNode_create_node1(Coordinate3D a,  Coordinate3D b, Coordinate3D c){
     Triangle3DNode* this = malloc(sizeof(Triangle3DNode));
     this->triangle = (Triangle3D){a,b,c};
@@ -381,10 +483,11 @@ void print_db_fct(char* name){
 
 
 void Coordinate3D_print(Coordinate3D coord){
-    printf("%.2f %.2f %.2f\n", coord.x, coord.y, coord.z);
+    printf("%.1f %.1f %.1f\n", coord.x, coord.y, coord.z);
     }
+
 void Scene3D_print(Scene3D* scene){
-    printf("scene\n");
+    printf("solid scene\n");
     for (int i = 0; i < scene->count; i++){
         Object3D_print(scene->objects[i]);
     }
@@ -405,12 +508,69 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
     else{
         print_spaces(1); printf("facet normal 0.0 0.0 0.0\n");
         print_spaces(2); printf("outer loop\n");
-        print_spaces(3);Coordinate3D_print(cur->triangle.a);
-        print_spaces(3);Coordinate3D_print(cur->triangle.b);
-        print_spaces(3);Coordinate3D_print(cur->triangle.c);
+        print_spaces(3); printf("vertex ");Coordinate3D_print(cur->triangle.a);
+        print_spaces(3); printf("vertex ");Coordinate3D_print(cur->triangle.b);
+        print_spaces(3); printf("vertex ");Coordinate3D_print(cur->triangle.c);
         print_spaces(2); printf("endloop\n");
-        print_spaces(1); printf("end facet\n");
+        print_spaces(1); printf("endfacet\n");
         Object3D_print_helper(cur->next, level+1);
         
     }
+}
+/*
+ * Write every shape from the Scene3D to the file with file_name using the STL
+ * text format. The function is responsible for opening, writing to, and
+ * closing the file.
+ *   Parameters:
+ *     scene: The scene to write to the file
+ *     file_name: The name of the file to write the STL data to
+ */
+void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
+    FILE* file = fopen(file_name, "w+");
+    fclose(file);
+    fopen(file_name, "a+");
+    if (file == NULL) {
+        fprintf(stderr, "Opening file failed with code %d.\n", errno);
+    }
+    Scene3D_write(scene, file);
+    fclose(file);
+}
+
+void Scene3D_write(Scene3D* scene, FILE* file){
+    fprintf(file, "solid scene\n");
+    for (int i = 0; i < scene->count; i++){
+        Object3D_write(scene->objects[i], file);
+    }
+    fprintf(file, "endsolid scene\n");
+}
+
+void Object3D_write(Object3D* obj, FILE* file){
+    if (obj->root == NULL)
+        return;
+    else{
+        Object3D_write_helper(obj->root, 0, file);
+    }
+}
+void write_spaces(int num, FILE* file){
+    for (int i = 0; i < num; i++)
+        fprintf(file, "  ");
+}
+void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
+    if (cur == NULL){
+        return;
+    }
+    else{
+        write_spaces(1, file); fprintf(file,"facet normal 0.0 0.0 0.0\n");
+        write_spaces(2, file); fprintf(file,"outer loop\n");
+        write_spaces(3, file); fprintf(file,"vertex "); Coordinate3D_write(file, cur->triangle.a);
+        write_spaces(3, file); fprintf(file,"vertex "); Coordinate3D_write(file, cur->triangle.b);
+        write_spaces(3, file); fprintf(file,"vertex "); Coordinate3D_write(file, cur->triangle.c);
+        write_spaces(2, file); fprintf(file,"endloop\n");
+        write_spaces(1, file); fprintf(file,"endfacet\n");
+        Object3D_write_helper(cur->next, level+1, file);
+        
+    }
+}
+void Coordinate3D_write(FILE* file, Coordinate3D coord){
+    fprintf(file, "%.1f %.1f %.1f\n", coord.x, coord.y, coord.z);
 }
