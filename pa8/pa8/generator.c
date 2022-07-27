@@ -11,7 +11,7 @@
 #define test_destroy
 #define test_scene_append
 #define test_cuboid
-
+#define test_pyramid_valgrind
 //#define test_quad
 int main(){
     Coordinate3D o = {0,0,0};
@@ -54,5 +54,13 @@ int main(){
     Scene3D_destroy(cuboid);
 #endif
     
+#ifdef test_pyramid_valgrind
+    Scene3D* pyramid_s = Scene3D_create();
+    Object3D* pyramid_o0 = Object3D_create_pyramid(o, 6, 5, "up");
+    Scene3D_append(pyramid_s, pyramid_o0);
+    Scene3D_write_stl_text(cuboid, "out.stl");
+    free(pyramid_s);
+    
+#endif
 
 }
