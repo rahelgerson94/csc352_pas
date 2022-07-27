@@ -132,7 +132,7 @@ Object3D* Object3D_create_pyramid(
     /* now, append the sides*/
     Coordinate3D tip;
     if (strcmp(orientation, "up") == 0){
-        Object3D_update_coords(w, w, origin, &a, &b, &c, &d);
+        Object3D_update_coords(w, w, 'z', origin, &a, &b, &c, &d);
         Object3D_append_quadrilateral(pyramid, a,b,c,d);
         Object3D_coord_shift(origin, 'z', h, &tip);
         
@@ -153,8 +153,10 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, left );
     }//end up case
     
-    else if (strcmp(orientation, "right") == 0){ //x-axis
-        Object3D_coord_shift(origin, 'x', h, &tip);
+    else if (strcmp(orientation, "right") == 0){ //apex is along x-axis
+        Object3D_update_coords(w, w, 'x', origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
+        Object3D_coord_shift(origin, 'y', h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -173,6 +175,8 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, back);
     } //right
     else if (strcmp(orientation, "down") == 0){
+        Object3D_update_coords(w, w, 'z', origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
         Object3D_coord_shift(origin, 'z', -h, &tip);
         
         //front
@@ -192,7 +196,9 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, left );
     } //down
     else if (strcmp(orientation, "left") == 0){
-        Object3D_coord_shift(origin, 'x', -h, &tip);
+        Object3D_update_coords(w, w, 'x', origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
+        Object3D_coord_shift(origin, 'y', -h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -211,7 +217,9 @@ Object3D* Object3D_create_pyramid(
         Object3D_append_triangle(pyramid, back);
     } //left
     else if (strcmp(orientation, "forward") == 0){
-        Object3D_coord_shift(origin, 'y', h, &tip);
+        Object3D_update_coords(w, w, 'y', origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
+        Object3D_coord_shift(origin, 'x', h, &tip); //apex along x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -232,7 +240,9 @@ Object3D* Object3D_create_pyramid(
     } //forward
     
     else if (strcmp(orientation, "backward") == 0){
-        Object3D_coord_shift(origin, 'y', -h, &tip);
+        Object3D_update_coords(w, w, 'y', origin, &a, &b, &c, &d);
+        Object3D_append_quadrilateral(pyramid, a,b,c,d);
+        Object3D_coord_shift(origin, 'x', -h, &tip); //apex along the x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -278,9 +288,11 @@ Object3D* Object3D_create_cuboid(
     cuboid->count = 0;
     cuboid->root = NULL;
     Coordinate3D a,b,c,d;
-    Object3D_update_coords(w, h, origin, &a, &b, &c, &d);
-    Object3D_append_quadrilateral(cuboid, a,b,c,d);
+    Object3D_update_coords(w, h, 'z', origin, &a, &b, &c, &d);
     
+    
+    
+    Object3D_append_quadrilateral(cuboid, a,b,c,d);
     /* now, append the sides*/
     
     //side1
@@ -395,14 +407,30 @@ void Object3D_append_quadrilateral(
 
 /* given a length l and width w, determine the 4 cordinates a,b, c,d
  in 3d space of a quadrilateral */
-void Object3D_update_coords(double length, double width, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
+void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
     double x = origin.x;
     double y = origin.y;
     double z = origin.z;
-    *a = (Coordinate3D){x - width/2, y + length/2, z};
-    *b = (Coordinate3D){x + width/2, y + length/2, z};
-    *c = (Coordinate3D){x + width/2, y - length/2, z};
-    *d = (Coordinate3D){x - width/2, y - length/2, z};
+    switch (axis){
+        case 'x':
+            *a = (Coordinate3D){x - width/2, y , z + length/2};
+            *b = (Coordinate3D){x + width/2, y, z + length/2};
+            *c = (Coordinate3D){x + width/2, y, z - length/2};
+            *d = (Coordinate3D){x - width/2, y, z - length/2};
+        break;
+        case 'y': //pyramid point is along the y axis
+            *a = (Coordinate3D){x, y + length/2, z + length/2};
+            *b = (Coordinate3D){x, y - length/2, z + length/2};
+            *c = (Coordinate3D){x, y + length/2, z - length/2};
+            *d = (Coordinate3D){x, y - length/2, z - length/2};
+        break;
+        case 'z':
+            *a = (Coordinate3D){x - width/2, y + length/2, z};
+            *b = (Coordinate3D){x + width/2, y + length/2, z};
+            *c = (Coordinate3D){x + width/2, y - length/2, z};
+            *d = (Coordinate3D){x - width/2, y - length/2, z};
+        break;
+    }
 }
 //helper fct for cuboid
 void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D* out){
