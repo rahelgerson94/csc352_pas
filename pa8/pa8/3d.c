@@ -121,7 +121,7 @@ Object3D* Object3D_create_pyramid(
     Coordinate3D origin,
     double w, double h, char* orientation){
     //Object3D* pyramid = malloc(8*(sizeof(Object3D*)));
-    Object3D* pyramid = malloc(1*(sizeof(Object3D*)));
+    Object3D* pyramid = malloc(8*(sizeof(Object3D*)));
     pyramid->count = 0;
     pyramid->root = NULL;
     
