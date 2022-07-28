@@ -165,4 +165,5 @@ Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels);
 Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment);
 void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double theta, double phi, Coordinate3D* out);
 void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
+double to_degrees(double in);
 #endif

@@ -605,7 +605,7 @@ void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
     }
 }
 void Coordinate3D_write(FILE* file, Coordinate3D coord){
-    fprintf(file, "%.5f %.5f %.5f\n", coord.x, coord.y, coord.z);
+    fprintf(file, "%.4f %.4f %.4f\n", coord.x, coord.y, coord.z);
 }
 int exists(const char *fname){
     FILE *file;
@@ -659,18 +659,20 @@ Object3D* Object3D_create_fractal(
  *
  */
 Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment){
+    Object3D* sphere = malloc(1*(sizeof(Object3D*)));
+    sphere->count = 0;
+    sphere->root = NULL;
     Coordinate3D a, b, c, d;
-    for (int phi = increment; phi < 180; phi = phi + increment){
+    for (int phi = increment; phi <= 180; phi = phi + increment){
         for (int theta = 0; theta < 360; theta = theta + increment){
             Object3D_spherical2cartesian(origin, radius, theta, phi, &a);
             Object3D_spherical2cartesian(origin, radius, theta, phi - increment, &b);
             Object3D_spherical2cartesian(origin, radius, theta - increment, phi, &c);
             Object3D_spherical2cartesian(origin, radius, theta - increment, phi - increment, &d);
-            
+            Object3D_append_quadrilateral(sphere, a, b, c, d);
         }
     }
-    Object3D* dummy;
-    return dummy;
+    return sphere;
 }
 /*
  convert a spherical coord to a cartesian one.
@@ -681,8 +683,16 @@ void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double the
     /*
      x = r (sin θ) (cos Φ)
      y = r (sin θ) (sin Φ)
-     z = r (cos θ) */
+     z = r (cos θ)
+     these funcs expect DEGREES */
+    theta = to_degrees(theta);
+    phi = to_degrees(phi);
     (*out).x = (radius * sin(theta) * cos(phi)) + origin.x ;
     (*out).y = (radius * sin(theta) * sin(phi)) + origin.y;
     (*out).z = (radius * cos(theta)) + origin.z ;
+}
+
+double to_degrees(double in){
+    double out = in*(PI/180);
+    return out;
 }
