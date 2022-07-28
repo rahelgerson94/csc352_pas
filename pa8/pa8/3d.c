@@ -1,11 +1,8 @@
-//
-//  3d.c
-//  pa8
-//
-//  Created by Rahel Gerson on 7/25/22.
-//
+
 #include "3d.h"
 #include <errno.h>
+#define PI 3.14159265358
+#include <math.h>
 //#define db0 //db for basis funcs
 //#define db_pyramid
 //#define db_quad
@@ -123,7 +120,8 @@ Object3D* Object3D_create_pyramid(
 #endif
     Coordinate3D origin,
     double w, double h, char* orientation){
-    Object3D* pyramid = malloc(8*(sizeof(Triangle3DNode)));
+    //Object3D* pyramid = malloc(8*(sizeof(Object3D*)));
+    Object3D* pyramid = malloc(1*(sizeof(Object3D*)));
     pyramid->count = 0;
     pyramid->root = NULL;
     
@@ -618,3 +616,75 @@ int exists(const char *fname){
     }
     return 0;
 }
+
+void Object3D_append_triangle(
+    Object3D* object, Triangle3D triangle);
+
+/*
+ * Write every shape from the Scene3D to the file with file_name using the STL
+ * binary format. The function is responsible for opening, writing to, and
+ * closing the file.
+ *   Parameters:
+ *     scene: The scene to write to the file
+ *     file_name: The name of the file to write the STL data to
+ */
+void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
+    
+}
+
+/*
+ * This function should create a new Object3D on the heap and populate it with
+ * a bunch of triangles to represent a cube-based fractal in 3D space.
+ * The caller is responsible for freeing the memory, or, if this shape gets
+ * added to a Scene3D, that is can be freed when the scene is.
+ *   Parameters:
+ *     origin: The origin point for the fractal (center)
+ *     size: Used for the width, height, and depth of the center cube
+ *     levels: The number of levels to recurse to when building the fractal
+ */
+Object3D* Object3D_create_fractal(
+    Coordinate3D origin,
+    double size, int levels);
+
+/*
+ * This function should create a new Object3D on the heap and populate it with
+ * a bunch of triangles to represent a sphere in 3D space.
+ * The caller is responsible for freeing the memory, or, if this shape gets
+ * added to a Scene3D, that is can be freed when the scene is.
+ *   Parameters:
+ *     origin: The origin point for the sphere (center)
+ *     radius: The desired radius of the sphere
+ *     increment: A value in the range (180, 0) that determines
+ *                the smoothness of the sphere.
+ *
+ */
+Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment){
+    Coordinate3D a, b, c, d;
+    for (int phi = increment; phi < 180; phi = phi + increment){
+        for (int theta = 0; theta < 360; theta = theta + increment){
+            Object3D_spherical2cartesian(origin, radius, theta, phi, &a);
+            Object3D_spherical2cartesian(origin, radius, theta, phi - increment, &b);
+            Object3D_spherical2cartesian(origin, radius, theta - increment, phi, &c);
+            Object3D_spherical2cartesian(origin, radius, theta - increment, phi - increment, &d);
+            
+        }
+    }
+    Object3D* dummy;
+    return dummy;
+}
+/*
+ convert a spherical coord to a cartesian one.
+ inputs: origin, radius, theta, phi
+ outputs: out, the point on the sphere in cartesian coord.
+ */
+void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double theta, double phi, Coordinate3D* out){
+    /*
+     x = r (sin θ) (cos Φ)
+     y = r (sin θ) (sin Φ)
+     z = r (cos θ) */
+    (*out).x = (radius * sin(theta) * cos(phi)) + origin.x ;
+    (*out).y = (radius * sin(theta) * sin(phi)) + origin.y;
+    (*out).z = (radius * cos(theta)) + origin.z ;
+}
+
+

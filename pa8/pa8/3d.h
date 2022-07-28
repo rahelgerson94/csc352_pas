@@ -98,40 +98,22 @@ void Scene3D_destroy(Scene3D* scene);
  *     object: The object to append to this scene
  */
 void Scene3D_append(Scene3D* scene, Object3D* object);
-
-/*
- * Write every shape from the Scene3D to the file with file_name using the STL
- * text format. The function is responsible for opening, writing to, and
- * closing the file.
- *   Parameters:
- *     scene: The scene to write to the file
- *     file_name: The name of the file to write the STL data to
- */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name);
+void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
+
 /* helper funcs for Scene3D_write_stl_text() */
 int exists(const char *fname);
 void Scene3D_write(Scene3D* scene, FILE* file);
 void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file);
 void Object3D_write(Object3D* obj, FILE* file);
 void Coordinate3D_write(FILE* file, Coordinate3D coord);
-/*
- * This function should create a new Object3D on the heap and populate it with
- * a bunch of triangles to represent a pyramid in 3D space.
- * The caller is responsible for freeing the memory, or, if this shape gets
- * added to a Scene3D, that is can be freed when the scene is.
- *   Parameters:
- *     origin: The origin point for the pyramid (center of base)
- *     width: The length of the sides of the base of the pyramid
- *     height: The height of the pyramid
- *     orientation: Determines the direction the pyramid points.
- *                  Should be either:
- *                    "forward"
- *                    "backward"
- *                    "up"
- *                    "down"
- *                    "left"
- *                    "right"
- */
+
+/* helper funcs for Scene3D_write_stl_binary() */
+void Scene3D_write_binary(Scene3D* scene, FILE* file);
+void Object3D_write_helper_binary(Triangle3DNode* cur, int level, FILE* file);
+void Object3D_write_binary(Object3D* obj, FILE* file);
+void Coordinate3D_write_binary(FILE* file, Coordinate3D coord);
+
 Object3D* Object3D_create_pyramid(
     Coordinate3D origin,
     double width, double height, char* orientation);
@@ -178,4 +160,9 @@ void Object3D_print(Object3D* obj);
 void print_down_arrow();
 void print_spaces(int num);
 void print_db_fct(char* name);
+
+Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels);
+Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment);
+void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double theta, double phi, Coordinate3D* out);
+void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
 #endif
