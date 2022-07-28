@@ -156,7 +156,7 @@ Object3D* Object3D_create_pyramid(
     else if (strcmp(orientation, "right") == 0){ //apex is along x-axis
         Object3D_update_coords(w, w, 'x', origin, &a, &b, &c, &d);
         Object3D_append_quadrilateral(pyramid, a,b,c,d);
-        Object3D_coord_shift(origin, 'y', h, &tip);
+        Object3D_coord_shift(origin, 'x', h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -198,7 +198,7 @@ Object3D* Object3D_create_pyramid(
     else if (strcmp(orientation, "left") == 0){
         Object3D_update_coords(w, w, 'x', origin, &a, &b, &c, &d);
         Object3D_append_quadrilateral(pyramid, a,b,c,d);
-        Object3D_coord_shift(origin, 'y', -h, &tip);
+        Object3D_coord_shift(origin, 'x', -h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -219,7 +219,7 @@ Object3D* Object3D_create_pyramid(
     else if (strcmp(orientation, "forward") == 0){
         Object3D_update_coords(w, w, 'y', origin, &a, &b, &c, &d);
         Object3D_append_quadrilateral(pyramid, a,b,c,d);
-        Object3D_coord_shift(origin, 'x', h, &tip); //apex along x
+        Object3D_coord_shift(origin, 'y', h, &tip); //apex along x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -242,7 +242,7 @@ Object3D* Object3D_create_pyramid(
     else if (strcmp(orientation, "backward") == 0){
         Object3D_update_coords(w, w, 'y', origin, &a, &b, &c, &d);
         Object3D_append_quadrilateral(pyramid, a,b,c,d);
-        Object3D_coord_shift(origin, 'x', -h, &tip); //apex along the x
+        Object3D_coord_shift(origin, 'y', -h, &tip); //apex along the x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
         Object3D_append_triangle(pyramid, top );
@@ -287,10 +287,14 @@ Object3D* Object3D_create_cuboid(
     Object3D* cuboid = malloc(sizeof(Object3D));
     cuboid->count = 0;
     cuboid->root = NULL;
-    Coordinate3D a,b,c,d;
-    Object3D_update_coords(w, h, 'z', origin, &a, &b, &c, &d);
-    
-    
+    Coordinate3D a_tmp,b_tmp,c_tmp,d_tmp;
+    Coordinate3D a, b, c, d;
+    Object3D_update_coords(h, w, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
+    //lower the base on the z axis
+    Object3D_coord_shift(a_tmp, 'z', -depth/2, &a);
+    Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
+    Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
+    Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
     
     Object3D_append_quadrilateral(cuboid, a,b,c,d);
     /* now, append the sides*/
@@ -340,8 +344,7 @@ void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
     }
 }
 /*
- * This function should append a triangle to the Linked list of Triangle3DNode's
- * within this object.
+ This function should append a triangle to the Linked list of Triangle3DNode's within this object.
  *   Parameters:
  *     object: The object ot append the triangle to.
  *     triangle: The triangle to append.
@@ -405,28 +408,31 @@ void Object3D_append_quadrilateral(
 #endif
 }
 
-/* given a length l and width w, determine the 4 cordinates a,b, c,d
- in 3d space of a quadrilateral */
+/*
+ inputs: length, width,
+    axis (x,y,z) along which the quadraliteral is to be be parallel to
+    origin: the origin of the quad.
+ outputs: the 4 cordinates a,b, c,d  in 3d space of a quadrilateral */
 void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
     double x = origin.x;
     double y = origin.y;
     double z = origin.z;
     switch (axis){
         case 'x':
-            *a = (Coordinate3D){x - width/2, y , z + length/2};
-            *b = (Coordinate3D){x + width/2, y, z + length/2};
-            *c = (Coordinate3D){x + width/2, y, z - length/2};
-            *d = (Coordinate3D){x - width/2, y, z - length/2};
-        break;
-        case 'y': //pyramid point is along the y axis
             *a = (Coordinate3D){x, y + length/2, z + length/2};
             *b = (Coordinate3D){x, y - length/2, z + length/2};
             *c = (Coordinate3D){x, y + length/2, z - length/2};
             *d = (Coordinate3D){x, y - length/2, z - length/2};
         break;
+        case 'y': //pyramid point is along the y axis
+            *a = (Coordinate3D){x + width/2, y , z + length/2};
+            *b = (Coordinate3D){x - width/2, y, z + length/2};
+            *c = (Coordinate3D){x + width/2, y, z - length/2};
+            *d = (Coordinate3D){x - width/2, y, z - length/2};
+        break;
         case 'z':
-            *a = (Coordinate3D){x - width/2, y + length/2, z};
-            *b = (Coordinate3D){x + width/2, y + length/2, z};
+            *a = (Coordinate3D){x + width/2, y + length/2, z};
+            *b = (Coordinate3D){x - width/2, y + length/2, z};
             *c = (Coordinate3D){x + width/2, y - length/2, z};
             *d = (Coordinate3D){x - width/2, y - length/2, z};
         break;
@@ -438,7 +444,8 @@ void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D
     (*out).y = in.y;
     (*out).z = in.z + depth;
 }
-
+/* given an input coordinate in, update out so that it is shifted by shamt amount along the specified axis.
+ outputs: out, which is in shifted by shamt amount */
 void Object3D_coord_shift(Coordinate3D in, char axis, double shamt, Coordinate3D* out){
     switch (axis){
         case 'x':
@@ -458,15 +465,6 @@ void Object3D_coord_shift(Coordinate3D in, char axis, double shamt, Coordinate3D
         break;
     }
 }
-
-Triangle3DNode* Triangle3DNode_create_node1(Coordinate3D a,  Coordinate3D b, Coordinate3D c){
-    Triangle3DNode* this = malloc(sizeof(Triangle3DNode));
-    this->triangle = (Triangle3D){a,b,c};
-    this->next = NULL;
-    return this;
-}
-
-
 
 void Coordinate3D_db_print(Coordinate3D coord){
     printf("(%.2f, %.2f, %.2f)", coord.x, coord.y, coord.z);
