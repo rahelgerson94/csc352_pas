@@ -660,18 +660,20 @@ Object3D* Object3D_create_fractal(
  *
  */
 Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment){
+    Object3D* sphere = malloc(1*(sizeof(Object3D*)));
+    sphere->count = 0;
+    sphere->root = NULL;
     Coordinate3D a, b, c, d;
-    for (int phi = increment; phi < 180; phi = phi + increment){
+    for (int phi = increment; phi <= 180; phi = phi + increment){
         for (int theta = 0; theta < 360; theta = theta + increment){
             Object3D_spherical2cartesian(origin, radius, theta, phi, &a);
             Object3D_spherical2cartesian(origin, radius, theta, phi - increment, &b);
             Object3D_spherical2cartesian(origin, radius, theta - increment, phi, &c);
             Object3D_spherical2cartesian(origin, radius, theta - increment, phi - increment, &d);
-            
+            Object3D_append_quadrilateral(sphere, a, b, c, d);
         }
     }
-    Object3D* dummy;
-    return dummy;
+    return sphere;
 }
 /*
  convert a spherical coord to a cartesian one.
