@@ -551,6 +551,7 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
  *     scene: The scene to write to the file
  *     file_name: The name of the file to write the STL data to
  */
+//TODO: make sure this works even if scene is empty!!
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
     /* check if file already exists, if it does remove it*/
     if (exists(file_name)){

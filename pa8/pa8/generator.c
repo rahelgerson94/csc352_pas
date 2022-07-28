@@ -13,6 +13,8 @@
 #define test_cuboid
 #define test_pyramid_valgrind
 //#define test_quad
+#define local
+
 int main(){
     Coordinate3D o = {0,0,0};
 #ifdef test_star
@@ -49,8 +51,12 @@ int main(){
     Scene3D* cuboid = Scene3D_create();
     Object3D* cuboid_o = Object3D_create_cuboid(o, 4, 6, 2);
     Scene3D_append(cuboid, cuboid_o);
+#ifdef local
     Scene3D_write_stl_text(cuboid, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cuboid.stl");
-
+#else
+    Scene3D_write_stl_text(cuboid, "out.stl");
+#endif
+    
     Scene3D_destroy(cuboid);
 #endif
     
@@ -58,7 +64,11 @@ int main(){
     Scene3D* pyramid_s = Scene3D_create();
     Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "backward");
     Scene3D_append(pyramid_s, pyramid_o);
+#ifdef local
     Scene3D_write_stl_text(pyramid_s, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/pyramid_backward.stl");
+#else
+    Scene3D_write_stl_text(pyramid_s, "out.stl");
+#endif
     Scene3D_destroy(pyramid_s);
 #endif
     
@@ -72,9 +82,12 @@ int main(){
     Object3D* roof = Object3D_create_pyramid(roof_o, base_height, roof_height, "up");
     Scene3D_append(house, base);
     Scene3D_append(house, roof);
+#ifdef local
     Scene3D_write_stl_text(house, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/house.stl");
+#else
+    Scene3D_write_stl_text(house, "out.stl");
     Scene3D_destroy(house);
-    
+#endif
     //make a diamond
     
 }
