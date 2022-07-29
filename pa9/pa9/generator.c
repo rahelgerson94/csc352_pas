@@ -31,7 +31,7 @@ int main(){
      Scene3D_append(test_append, cube1);
 
      Scene3D_destroy(test_append);
-    Object3D_destroy(cube2);
+    //Object3D_destroy(cube2);
     
     
     /*
