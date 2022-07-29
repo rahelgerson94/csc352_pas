@@ -740,11 +740,14 @@ int Scene3D_count_triangles(Scene3D* this){
 //        seek(a->next, tail);
 //}
 
-/* append b to a like this: [a,b]*/
+/* append b to a like this: [a,b]
+ */
+
 void Object3D_append(Object3D* a, Object3D* b){
     for (int i = 0; i < b->count; i++){
         Triangle3DNode* curr = b->root;
         Object3D_append_triangle(a, curr->triangle);
         curr = b->root->next;
     }
+    Object3D_destroy(b);
 }
