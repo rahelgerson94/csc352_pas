@@ -22,13 +22,19 @@ int main(){
 #endif
 #ifdef test_Object3D_append_helper
     
-    Coordinate3D o2 = {0,0,100};
-    Object3D* sphere1 = Object3D_create_sphere(o, 50, 90);
-    Object3D* sphere2 = Object3D_create_sphere(o2, 50, 90);
-    Object3D_append(sphere1, sphere2);
-    Object3D_db_print(sphere1);
-    Object3D_destroy(sphere1);
-    Object3D_destroy(sphere2);
+    Coordinate3D o2 = {0,0,10};
+    Object3D* cube1 = Object3D_create_cuboid(o, 10, 10, 10);
+    Object3D* cube2 =  Object3D_create_cuboid(o2, 10, 10, 10);
+    Object3D_append(cube1, cube2);
+    /*
+     Scene3D* test_append = Scene3D_create();
+     Scene3D_append(test_append, cube1);
+     Scene3D_destroy(test_append);
+     */
+    
+    Object3D_db_print(cube1);
+    Object3D_destroy(cube1);
+    Object3D_destroy(cube2);
     
 #endif
     
