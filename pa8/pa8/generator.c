@@ -12,8 +12,10 @@
 //#define test_scene_append
 #define test_cuboid
 #define test_pyramid_valgrind
+#define test_cube2
+#define test_cube3
 //#define test_quad
-//#define local
+#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
@@ -89,5 +91,36 @@ int main(){
     Scene3D_destroy(house);
 #endif
     //make a diamond
+
+#ifdef test_cube2
+//
+    Scene3D* cube1 = Scene3D_create();
+    //Coordinate3D o = {20,20,20};
+    base_height = 10;
+    Object3D* cube1_o = Object3D_create_cuboid(o, base_height, base_height, base_height);
     
+    Scene3D_append(cube1, cube1_o);
+#ifdef local
+    Scene3D_write_stl_text(cube1, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cube_origin20.stl");
+#else
+    Scene3D_write_stl_text(cube1, "out.stl");
+    Scene3D_destroy(cube1);
+#endif
+#endif
+    
+#ifdef test_cube3
+//
+    Scene3D* cube3 = Scene3D_create();
+    //Coordinate3D o = {0,0,0};
+    base_height = 10;
+    Object3D* cube3_o = Object3D_create_cuboid(o, base_height, base_height, base_height);
+    
+    Scene3D_append(cube3, cube3_o);
+#ifdef local
+    Scene3D_write_stl_text(cube3, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cube_origin0.stl");
+#else
+    Scene3D_write_stl_text(cube3, "out.stl");
+    Scene3D_destroy(cube1);
+#endif
+#endif
 }
