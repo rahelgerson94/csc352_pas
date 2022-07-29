@@ -26,15 +26,18 @@ int main(){
     Object3D* cube1 = Object3D_create_cuboid(o, 10, 10, 10);
     Object3D* cube2 =  Object3D_create_cuboid(o2, 10, 10, 10);
     Object3D_append(cube1, cube2);
-    /*
+    
      Scene3D* test_append = Scene3D_create();
      Scene3D_append(test_append, cube1);
      Scene3D_destroy(test_append);
+     
+    
+    /*
+     Object3D_db_print(cube1);
+     Object3D_destroy(cube1);
+     Object3D_destroy(cube2);
      */
     
-    Object3D_db_print(cube1);
-    Object3D_destroy(cube1);
-    Object3D_destroy(cube2);
     
 #endif
     
