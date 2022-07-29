@@ -724,17 +724,27 @@ int Scene3D_count_triangles(Scene3D* this){
     }
     return tot_tris;
 }
+
+///* append b to a like this: [a,b]*/
+//void Object3D_append(Object3D* a, Object3D* b){
+//    Triangle3DNode* temp;
+//    seek(a, temp);
+//}
+////go to last node in a ll
+//void seek(Triangle3DNode* a, Triangle3DNode* tail){
+//    if (a->next == NULL){
+//        tail = a;
+//        return;
+//    }
+//    else
+//        seek(a->next, tail);
+//}
+
 /* append b to a like this: [a,b]*/
 void Object3D_append(Object3D* a, Object3D* b){
-    Object3D_append_helper(a->root, b->root);
-    a->count += b->count;
-}
-void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b){
-    if (a->next == NULL){
-        a->next = b;
-        return;
-    }
-    else{
-        Object3D_append_helper(a->next, b);
+    for (int i = 0; i < b->count; i++){
+        Triangle3DNode* curr = b->root;
+        Object3D_append_triangle(a, curr->triangle);
+        curr = b->root->next;
     }
 }
