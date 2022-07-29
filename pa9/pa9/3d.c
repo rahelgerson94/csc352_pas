@@ -662,9 +662,9 @@ Object3D* Object3D_create_fractal(
             Object3D_coord_shift(origin, axes[i], -size, &faces[i]);
             Object3D_create_fractal(faces[i], -size, levels-1);
         }
-        Obj
+        //FIXME
     }
-    
+    return cube;
 }
 
 /*
