@@ -166,4 +166,7 @@ Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double incr
 void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double theta, double phi, Coordinate3D* out);
 void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
 double to_degrees(double in);
+int Scene3D_count_triangles(Scene3D* this);
+void Object3D_append(Object3D* o1, Object3D* o2);
+void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b);
 #endif

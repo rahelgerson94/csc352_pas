@@ -644,7 +644,28 @@ void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
  */
 Object3D* Object3D_create_fractal(
     Coordinate3D origin,
-    double size, int levels);
+     double size, int levels){
+    Object3D* cube;
+    if (levels == 0){
+        cube = Object3D_create_cuboid(origin, size, size, size);
+        return cube;
+    }
+    else{
+        //right left, fwd, back, top, bottom;
+        //0        1    2    3    4   5
+        Coordinate3D faces[6];
+        char axes[6] = {'x', 'x', 'y', 'y', 'z', 'z'};
+        for (int i = 0; i < 6; i++){
+            size = size/2;
+            Object3D_coord_shift(origin, axes[i], size, &faces[i]);
+            Object3D_create_fractal(faces[i], size, levels-1);
+            Object3D_coord_shift(origin, axes[i], -size, &faces[i]);
+            Object3D_create_fractal(faces[i], -size, levels-1);
+        }
+        Obj
+    }
+    
+}
 
 /*
  * This function should create a new Object3D on the heap and populate it with
@@ -695,4 +716,21 @@ void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double the
 double to_degrees(double in){
     double out = in*(PI/180);
     return out;
+}
+int Scene3D_count_triangles(Scene3D* this){
+    int tot_tris = 0;
+    for (int i = 0; i < this->count; i++){
+        tot_tris += this->objects[i]->count;
+    }
+    return tot_tris;
+}
+/* append b to a like this: [a,b]*/
+void Object3D_append(Object3D* a, Object3D* b){
+    Object3D_append_helper(a->root, b->count);
+    a->count += b->count;
+}
+void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b){
+    if (a->next == NULL){
+        a->next = b;
+    }
 }

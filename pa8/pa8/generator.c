@@ -13,7 +13,7 @@
 #define test_cuboid
 #define test_pyramid_valgrind
 //#define test_quad
-#define local
+//#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
