@@ -17,7 +17,7 @@
 #define parallel_cubes
 //#define test_quad
 #define test_face
-#define local
+//#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
@@ -33,7 +33,7 @@ int main(){
 #ifdef local
     Scene3D_write_stl_text(star, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/star.stl");
 #else
-    Scene3D_write_stl_text(cuboid, "out.stl");
+    Scene3D_write_stl_text(star, "out.stl");
 #endif
     Scene3D_destroy(star);
 #endif
