@@ -645,7 +645,7 @@ void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
 Object3D* Object3D_create_fractal(
     Coordinate3D origin,
      double size, int levels){
-    Object3D* cube;
+    Object3D* cube = malloc(sizeof(Object3D));
     if (levels == 0){
         cube = Object3D_create_cuboid(origin, size, size, size);
         return cube;
@@ -726,7 +726,7 @@ int Scene3D_count_triangles(Scene3D* this){
 }
 /* append b to a like this: [a,b]*/
 void Object3D_append(Object3D* a, Object3D* b){
-    Object3D_append_helper(a->root, b->count);
+    Object3D_append_helper(a->root, b->root);
     a->count += b->count;
 }
 void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b){
