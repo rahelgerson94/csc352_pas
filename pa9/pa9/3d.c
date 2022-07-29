@@ -731,6 +731,9 @@ void Object3D_append(Object3D* a, Object3D* b){
 }
 void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b){
     if (a->next == NULL){
-        a->next = b;
+        b = a->next;
+    }
+    else{
+        Object3D_append_helper(a->next, b);
     }
 }
