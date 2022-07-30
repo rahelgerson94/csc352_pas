@@ -93,8 +93,6 @@ void Scene3D_append(Scene3D* scene, Object3D* object){
 #endif
     
 }
-
-
 /*
  * This function should create a new Object3D on the heap and populate it with
  * a bunch of triangles to represent a pyramid in 3D space.
@@ -292,7 +290,7 @@ Object3D* Object3D_create_cuboid(
     Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
     Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
     Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
-    //(left)
+    //(left on cura)
     Object3D_append_quadrilateral(cuboid, a,b,c,d);
     
     /* now, append the sides*/
@@ -301,111 +299,23 @@ Object3D* Object3D_create_cuboid(
     Object3D_update_coord_for_depth(b, depth, &b1);
     Object3D_update_coord_for_depth(c, depth, &c1);
     Object3D_update_coord_for_depth(d, depth, &d1);
-    //side1 (top)
+    // (top on cura)
     Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
 
-    //(back)
+    //(back on cura)
     Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
 
-    //side3
-    
+    //(bottom on cura)
     Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
 
-    //(front)
+    //(front on cura)
     Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
 
-    //(right)
+    //(right on cura)
     Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
 
     return cuboid;
 }
-
-//Object3D* Object3D_create_cuboid(
-//    Coordinate3D origin,
-//    double w, double h, double depth){
-//    Object3D* cuboid = malloc(sizeof(Object3D));
-//    cuboid->count = 0;
-//    cuboid->root = NULL;
-//    Coordinate3D a_tmp,b_tmp,c_tmp,d_tmp;
-//    Coordinate3D a, b, c, d;
-//    Object3D_update_coords(h, w, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//    //lower the base on the z axis
-//    Object3D_coord_shift(a_tmp, 'z', -depth/2, &a);
-//    Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
-//    Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
-//    Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
-//    //bottom
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    //raise the base on the z axis
-//    Object3D_coord_shift(a_tmp, 'z', depth/2, &a);
-//    Object3D_coord_shift(b_tmp, 'z', depth/2, &b);
-//    Object3D_coord_shift(c_tmp, 'z', depth/2, &c);
-//    Object3D_coord_shift(d_tmp, 'z', depth/2, &d);
-//    //top
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    /* left and right */
-//
-//    Object3D_update_coords(depth, h, 'x', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//    //right side: shift quadriletarel on pos x-axis
-//    Object3D_coord_shift(a_tmp, 'x', w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'x', w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'x', w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'x', w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    //left side: shift quadriletarel on neg x-axis
-//    Object3D_coord_shift(a_tmp, 'x', -w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'x', -w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'x', -w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'x', -w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    /* front and back */
-//    Object3D_update_coords(depth, w, 'y', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//
-//    //front side
-//    Object3D_coord_shift(a_tmp, 'y', h/2, &a);
-//    Object3D_coord_shift(b_tmp, 'y', h/2, &b);
-//    Object3D_coord_shift(c_tmp, 'y', h/2, &c);
-//    Object3D_coord_shift(d_tmp, 'y', h/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//    //back side
-//    Object3D_coord_shift(a_tmp, 'y', -h/2, &a);
-//    Object3D_coord_shift(b_tmp, 'y', -h/2, &b);
-//    Object3D_coord_shift(c_tmp, 'y', -h/2, &c);
-//    Object3D_coord_shift(d_tmp, 'y', -h/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//
-////    /* -------- */
-////    /* now, append the sides*/
-////
-////    //side1
-////    Coordinate3D a1, b1;
-////    Object3D_update_coord_for_depth(a, depth, &a1);
-////    Object3D_update_coord_for_depth(b, depth, &b1);
-////    Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
-////
-////    //side2
-////    Coordinate3D c1;
-////    Object3D_update_coord_for_depth(c, depth, &c1);
-////    Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
-////
-////    //side3
-////    Coordinate3D d1;
-////    Object3D_update_coord_for_depth(d, depth, &d1);
-////    Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
-////
-////    //side4
-////    Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
-////
-////    //top
-////    Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
-////
-//    return cuboid;
-//}
 
 
 void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
