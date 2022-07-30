@@ -74,6 +74,7 @@ int main(){
     Scene3D_write_stl_text(cuboid, "out.stl");
 #endif
     Scene3D_destroy(cuboid);
+    Object3D_destroy(cuboid_o);
 #endif
     
 //test5
