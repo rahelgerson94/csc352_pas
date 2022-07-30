@@ -18,7 +18,7 @@
 //#define test_quad
 #define test_face
 #define test_cuboid
-//#define local
+#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
@@ -66,7 +66,7 @@ int main(){
 //test4
 #ifdef test_cuboid
     Scene3D* cuboid = Scene3D_create();
-    Object3D* cuboid_o = Object3D_create_cuboid(o, 4, 6, 2);
+    Object3D* cuboid_o = Object3D_create_cuboid(o, 6, 4, 12);
     Scene3D_append(cuboid, cuboid_o);
 #ifdef local
     Scene3D_write_stl_text(cuboid, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cuboid.stl");

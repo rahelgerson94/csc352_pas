@@ -286,36 +286,35 @@ Object3D* Object3D_create_cuboid(
     cuboid->root = NULL;
     Coordinate3D a_tmp,b_tmp,c_tmp,d_tmp;
     Coordinate3D a, b, c, d;
-    Object3D_update_coords(h, w, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
+    Object3D_update_coords2(w, h, depth, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
     //lower the base on the z axis
     Object3D_coord_shift(a_tmp, 'z', -depth/2, &a);
     Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
     Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
     Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
-
+    //(left)
     Object3D_append_quadrilateral(cuboid, a,b,c,d);
+    
     /* now, append the sides*/
-
-    //side1
-    Coordinate3D a1, b1;
+    Coordinate3D a1, b1, c1, d1;
     Object3D_update_coord_for_depth(a, depth, &a1);
     Object3D_update_coord_for_depth(b, depth, &b1);
+    Object3D_update_coord_for_depth(c, depth, &c1);
+    Object3D_update_coord_for_depth(d, depth, &d1);
+    //side1 (top)
     Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
 
-    //side2
-    Coordinate3D c1;
-    Object3D_update_coord_for_depth(c, depth, &c1);
+    //(back)
     Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
 
     //side3
-    Coordinate3D d1;
-    Object3D_update_coord_for_depth(d, depth, &d1);
+    
     Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
 
-    //side4
+    //(front)
     Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
 
-    //top
+    //(right)
     Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
 
     return cuboid;
@@ -519,6 +518,31 @@ void Object3D_update_coords(double length, double width, char axis, Coordinate3D
             *b = (Coordinate3D){x - width/2, y + length/2, z};
             *c = (Coordinate3D){x + width/2, y - length/2, z};
             *d = (Coordinate3D){x - width/2, y - length/2, z};
+        break;
+    }
+}
+void Object3D_update_coords2(double x_dim, double y_dim, double z_dim, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
+    double x = origin.x;
+    double y = origin.y;
+    double z = origin.z;
+    switch (axis){
+        case 'x':
+            *a = (Coordinate3D){x, y - y_dim/2, z + z_dim/2};
+            *b = (Coordinate3D){x, y + y_dim/2, z + z_dim/2};
+            *c = (Coordinate3D){x, y + y_dim/2, z - z_dim/2};
+            *d = (Coordinate3D){x, y - y_dim/2, z - z_dim/2};
+        break;
+        case 'y': //pyramid point is along the y axis
+            *a = (Coordinate3D){x + x_dim/2, y , z + z_dim/2};
+            *b = (Coordinate3D){x - x_dim/2, y, z + z_dim/2};
+            *c = (Coordinate3D){x + x_dim/2, y, z - z_dim/2};
+            *d = (Coordinate3D){x - x_dim/2, y, z - z_dim/2};
+        break;
+        case 'z':
+            *a = (Coordinate3D){x - x_dim/2, y + y_dim/2, z};
+            *b = (Coordinate3D){x + x_dim/2, y + y_dim/2, z};
+            *c = (Coordinate3D){x + x_dim/2, y - y_dim/2, z};
+            *d = (Coordinate3D){x - x_dim/2, y - y_dim/2, z};
         break;
     }
 }

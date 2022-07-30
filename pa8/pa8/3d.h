@@ -151,6 +151,7 @@ Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle);
 
 void Coordinate3D_db_print(Coordinate3D coord);
 void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
+void Object3D_update_coords2(double length, double width, double depth, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
 void Object3D_db_print_helper(Triangle3DNode* cur, int level);
 void Object3D_db_print(Object3D* obj);
 void Scene3D_print(Scene3D* scene);
