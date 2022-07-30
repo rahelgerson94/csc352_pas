@@ -12,11 +12,12 @@
 //#define test_scene_append
 //#define test_cuboid
 //#define test_pyramid_valgrind
-#define test_cube2
-#define test_cube3
-#define parallel_cubes
+//#define test_cube2
+//#define test_cube3
+//#define parallel_cubes
 //#define test_quad
 #define test_face
+#define test_cuboid
 //#define local
 
 int main(){
@@ -72,9 +73,9 @@ int main(){
 #else
     Scene3D_write_stl_text(cuboid, "out.stl");
 #endif
-    
     Scene3D_destroy(cuboid);
 #endif
+    
 //test5
 #ifdef test_pyramid_valgrind
     Scene3D* pyramid_s = Scene3D_create();
@@ -135,7 +136,6 @@ int main(){
     Scene3D_write_stl_text(cube3, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cuboid_origin0.stl");
 #else
     Scene3D_write_stl_text(cube3, "out.stl");
-   
 #endif
     Scene3D_destroy(cube3);
 #endif
