@@ -18,7 +18,7 @@
 //#define test_quad
 #define test_face
 #define test_cuboid
-#define local
+//#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
