@@ -174,7 +174,7 @@ int main(){
 #ifdef local
     Scene3D_append(face, object); Scene3D_write_stl_text(face, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/face.stl");
 #else
-    Scene3D_write_stl_text(cube3, "out.stl");
+    Scene3D_write_stl_text(face, "out.stl");
 #endif
     Scene3D_destroy(face);
 #endif
