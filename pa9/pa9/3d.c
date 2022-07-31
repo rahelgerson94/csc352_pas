@@ -736,9 +736,7 @@ void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
  *     size: Used for the width, height, and depth of the center cube
  *     levels: The number of levels to recurse to when building the fractal
  */
-Object3D* Object3D_create_fractal(
-    Coordinate3D origin,
-     double size, int levels){
+Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels){
     Object3D* cube = malloc(sizeof(Object3D));
     if (levels == 0){
         cube = Object3D_create_cuboid(origin, size, size, size);
