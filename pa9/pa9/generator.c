@@ -10,7 +10,7 @@
 
 //#define test_sphere
 #define test_Object3D_append_helper
-#define test_print
+//#define test_print
 //#define local
 char* file_name;
 
