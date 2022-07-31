@@ -1,24 +1,23 @@
-//
-//  generator.c
 //  pa8
-//
+// this library makes 3d shapes...
+//  csc352
 //  Created by Rahel Gerson on 7/25/22.
-//
-
+/* to test a given scene, just uncomment the define directive. */
 #include <stdio.h>
 #include "3d.h"
-#define test_star
-#define test_destroy
-#define test_scene_append
-#define test_cuboid
-#define test_pyramid_valgrind
-#define test_cube2
-#define test_cube3
-#define parallel_cubes
-//#define test_quad
-#define test_face
-#define test_cuboid
-//#define local
+//#define test_star //test1
+//#define test_destroy //test2
+//#define test_scene_append //test3
+//#define test_cuboid //test4
+//
+//#define test_pyramid_valgrind //test5
+//#define test_cube2 //test6
+//#define test_cube3 //test7
+#define parallel_cubes //test8
+////#define test_quad
+//#define test_face //test9
+//#define test_house //test10
+#define local
 
 int main(){
     Coordinate3D o = {0,0,0};
@@ -78,7 +77,7 @@ int main(){
     
 //test5
 #ifdef test_pyramid_valgrind
-    Scene3D* pyramid_s = Scene3D_create();
+    //Scene3D* pyramid_s = Scene3D_create();
     Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "backward");
     Scene3D_append(pyramid_s, pyramid_o);
 #ifdef local
@@ -89,7 +88,7 @@ int main(){
     Scene3D_destroy(pyramid_s);
 #endif
     
-//ttest6: make a house
+#ifdef test_house
     double base_height, roof_height;
     base_height = 10;
     Scene3D* house = Scene3D_create();
@@ -106,6 +105,7 @@ int main(){
     
 #endif
     Scene3D_destroy(house);
+#endif
     
 //test7
 #ifdef test_cube2
@@ -142,13 +142,20 @@ int main(){
     
 //test9
 #ifdef parallel_cubes
+#ifndef test_cube3
+    Object3D* cube3_o = Object3D_create_cuboid(o, 5, 10, 15);
+#endif
+#ifndef test_cube2
+    Coordinate3D o2 = {35,0,0};
+    Object3D* cube2_o = Object3D_create_cuboid(o2, 5, 10, 15);
+#endif
     Scene3D* s3 = Scene3D_create();
     Scene3D_append(s3, cube3_o);
     Scene3D_append(s3, cube2_o);
 #ifdef local
-    Scene3D_write_stl_text(cube3, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/parallel_cubes.stl");
+    Scene3D_write_stl_text(s3, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/parallel_cubes.stl");
 #else
-    Scene3D_write_stl_text(cube3, "out.stl");
+    Scene3D_write_stl_text(s3, "out.stl");
 #endif
     Scene3D_destroy(s3);
 #endif

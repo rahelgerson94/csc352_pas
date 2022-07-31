@@ -9,7 +9,8 @@
 #include "3d.h"
 
 //#define test_sphere
-#define test_Object3D_append_helper
+//#define test_Object3D_append_helper
+#define test_print
 int main(){
     Coordinate3D o = {0,0,0};
 
@@ -41,10 +42,13 @@ int main(){
      Object3D_db_print(cube1);
     //Object3D_destroy(cube2);
      Object3D_destroy(cube1);
-     
-     
+#endif
     
-    
+#ifdef test_print
+    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere_stl.bin";
+    Scene3D* sphere = Scene3D_create();
+    Scene3D_write_stl_binary(sphere, file_name);
+    Scene3D_destroy(sphere);
 #endif
     
 }

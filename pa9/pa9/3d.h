@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
+
 #include <stdbool.h>
 
 /*
@@ -109,10 +111,13 @@ void Object3D_write(Object3D* obj, FILE* file);
 void Coordinate3D_write(FILE* file, Coordinate3D coord);
 
 /* helper funcs for Scene3D_write_stl_binary() */
-void Scene3D_write_binary(Scene3D* scene, FILE* file);
 void Object3D_write_helper_binary(Triangle3DNode* cur, int level, FILE* file);
 void Object3D_write_binary(Object3D* obj, FILE* file);
+
+void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
 void Coordinate3D_write_binary(FILE* file, Coordinate3D coord);
+void Scene3D_print_stl_binary_header(Scene3D* scene, FILE* file);
+void Scene3D_print_stl_binary_triangle_count(Scene3D* scene, FILE* file);
 
 Object3D* Object3D_create_pyramid(
     Coordinate3D origin,

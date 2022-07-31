@@ -10,7 +10,7 @@
 //#define db_o_destroy
 //#define db_s_destroy
 //#define db_s_append
-#define write_gradescope
+
 /*
  * This function allocates space for a new Scene3D object on the heap,
  * initializes the values to defaults as necessary, and returns a pointer to
@@ -717,9 +717,32 @@ void Object3D_append_triangle(
  *     file_name: The name of the file to write the STL data to
  */
 void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
-    
+    if (exists(file_name)){
+        remove(file_name);
+    }
+    FILE* file = fopen(file_name, "ab+");
+    if (file == NULL) {
+        fprintf(stderr, "Opening file failed with code %d.\n", errno);
+    }
+    Scene3D_print_stl_binary_header(scene, file);
+    Scene3D_print_stl_binary_triangle_count(scene, file);
+    fclose(file);
 }
 
+void Scene3D_print_stl_binary_header(Scene3D* scene, FILE* file){
+    uint64_t zero  = 0; //8B
+    for (int i = 0; i < 10; i++ ){
+        fwrite(&zero, 1, sizeof(uint64_t), file);
+    }
+}
+
+void Scene3D_print_stl_binary_triangle_count(Scene3D* scene, FILE* file){
+    uint32_t count  = 44; //8B
+    fwrite(&count, 1, sizeof(uint32_t), file);
+
+}
+
+ 
 /*
  * This function should create a new Object3D on the heap and populate it with
  * a bunch of triangles to represent a cube-based fractal in 3D space.
@@ -839,3 +862,4 @@ void Object3D_append(Object3D* a, Object3D* b){
     }
     Object3D_destroy(b);
 }
+
