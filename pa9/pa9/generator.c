@@ -11,8 +11,15 @@
 //#define test_sphere
 //#define test_Object3D_append_helper
 #define test_print
+//#define local
+char* file_name;
+
+
 int main(){
     Coordinate3D o = {0,0,0};
+#ifndef local
+    file_name = "out.stl";
+#endif
 
 #ifdef test_sphere
     Scene3D* sphere = Scene3D_create();
@@ -45,7 +52,9 @@ int main(){
 #endif
     
 #ifdef test_print
-    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/cube_stl.bin";
+    #ifdef local
+        char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/cube_stl.bin";
+    #endif
     Scene3D* cube = Scene3D_create();
     Object3D* cube_o = Object3D_create_cuboid(o, 10, 10, 10);
     Scene3D_append(cube, cube_o);
