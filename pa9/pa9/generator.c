@@ -59,16 +59,20 @@ int main(){
     Scene3D* cube = Scene3D_create();
     Object3D* cube_o = Object3D_create_cuboid(o, 10, 10, 10);
     Scene3D_append(cube, cube_o);
-    Scene3D_write_stl_binary(cube, file_name_bin);
-    Scene3D_write_stl_text(cube, file_name_txt);
+    
+    Scene3D_write_stl_binary(cube, "out.stl");
+    Scene3D_write_stl_text(cube, "out.stl");
     Scene3D_destroy(cube);
 
 
-    char* sphere_bin = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere_bin.stl";
     Object3D* sphere1 = Object3D_create_sphere(o, 50, 90);
     Scene3D* sphere = Scene3D_create();
     Scene3D_append(sphere, sphere1);
+#ifdef local
+    char* sphere_bin = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere_bin.stl";
     Scene3D_write_stl_binary(sphere, sphere_bin);
+#endif
+    Scene3D_write_stl_binary(sphere, "out.stl");
     Scene3D_destroy(sphere);
 //    Coordinate3D test_coord = {20, 30, 40};
 //    char* coord3d_fname = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/coord3d_test.stl";
