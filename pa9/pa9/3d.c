@@ -287,129 +287,64 @@ Object3D* Object3D_create_cuboid(
     cuboid->root = NULL;
     Coordinate3D a_tmp,b_tmp,c_tmp,d_tmp;
     Coordinate3D a, b, c, d;
-    Object3D_update_coords(h, w, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
+    Object3D_update_coords2(w, h, depth, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
     //lower the base on the z axis
     Object3D_coord_shift(a_tmp, 'z', -depth/2, &a);
     Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
     Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
     Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
-
+    //(left on cura)
     Object3D_append_quadrilateral(cuboid, a,b,c,d);
+    
     /* now, append the sides*/
-
-    //side1
-    Coordinate3D a1, b1;
+    Coordinate3D a1, b1, c1, d1;
     Object3D_update_coord_for_depth(a, depth, &a1);
     Object3D_update_coord_for_depth(b, depth, &b1);
+    Object3D_update_coord_for_depth(c, depth, &c1);
+    Object3D_update_coord_for_depth(d, depth, &d1);
+    // (top on cura)
     Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
 
-    //side2
-    Coordinate3D c1;
-    Object3D_update_coord_for_depth(c, depth, &c1);
+    //(back on cura)
     Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
 
-    //side3
-    Coordinate3D d1;
-    Object3D_update_coord_for_depth(d, depth, &d1);
+    //(bottom on cura)
     Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
 
-    //side4
+    //(front on cura)
     Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
 
-    //top
+    //(right on cura)
     Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
-
     return cuboid;
 }
 
 
-
-//Object3D* Object3D_create_cuboid(
-//    Coordinate3D origin,
-//    double w, double h, double depth){
-//    Object3D* cuboid = malloc(sizeof(Object3D));
-//    cuboid->count = 0;
-//    cuboid->root = NULL;
-//    Coordinate3D a_tmp,b_tmp,c_tmp,d_tmp;
-//    Coordinate3D a, b, c, d;
-//    Object3D_update_coords(h, w, 'z', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//    //lower the base on the z axis
-//    Object3D_coord_shift(a_tmp, 'z', -depth/2, &a);
-//    Object3D_coord_shift(b_tmp, 'z', -depth/2, &b);
-//    Object3D_coord_shift(c_tmp, 'z', -depth/2, &c);
-//    Object3D_coord_shift(d_tmp, 'z', -depth/2, &d);
-//    //bottom
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    //raise the base on the z axis
-//    Object3D_coord_shift(a_tmp, 'z', depth/2, &a);
-//    Object3D_coord_shift(b_tmp, 'z', depth/2, &b);
-//    Object3D_coord_shift(c_tmp, 'z', depth/2, &c);
-//    Object3D_coord_shift(d_tmp, 'z', depth/2, &d);
-//    //top
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    /* left and right */
-//    Object3D_update_coords(h, depth, 'x', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//    //right side: shift quadriletarel on pos x-axis
-//    Object3D_coord_shift(a_tmp, 'x', w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'x', w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'x', w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'x', w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    //left side: shift quadriletarel on neg x-axis
-//    Object3D_coord_shift(a_tmp, 'x', -w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'x', -w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'x', -w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'x', -w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//    /* front and back */
-//    Object3D_update_coords(w, depth, 'y', origin, &a_tmp, &b_tmp, &c_tmp, &d_tmp);
-//
-//    //front side
-//    Object3D_coord_shift(a_tmp, 'y', w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'y', w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'y', w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'y', w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//    //back side
-//    Object3D_coord_shift(a_tmp, 'y', -w/2, &a);
-//    Object3D_coord_shift(b_tmp, 'y', -w/2, &b);
-//    Object3D_coord_shift(c_tmp, 'y', -w/2, &c);
-//    Object3D_coord_shift(d_tmp, 'y', -w/2, &d);
-//    Object3D_append_quadrilateral(cuboid, a,b,c,d);
-//
-//
-////    /* -------- */
-////    /* now, append the sides*/
-////
-////    //side1
-////    Coordinate3D a1, b1;
-////    Object3D_update_coord_for_depth(a, depth, &a1);
-////    Object3D_update_coord_for_depth(b, depth, &b1);
-////    Object3D_append_quadrilateral(cuboid, a,b,a1,b1);
-////
-////    //side2
-////    Coordinate3D c1;
-////    Object3D_update_coord_for_depth(c, depth, &c1);
-////    Object3D_append_quadrilateral(cuboid, b,c,b1,c1);
-////
-////    //side3
-////    Coordinate3D d1;
-////    Object3D_update_coord_for_depth(d, depth, &d1);
-////    Object3D_append_quadrilateral(cuboid, c,d,c1,d1);
-////
-////    //side4
-////    Object3D_append_quadrilateral(cuboid, a,d, a1, d1);
-////
-////    //top
-////    Object3D_append_quadrilateral(cuboid, a1,b1, c1, d1);
-////
-//    return cuboid;
-//}
-
+void Object3D_update_coords2(double x_dim, double y_dim, double z_dim, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
+    double x = origin.x;
+    double y = origin.y;
+    double z = origin.z;
+    switch (axis){
+        case 'x':
+            *a = (Coordinate3D){x, y - y_dim/2, z + z_dim/2};
+            *b = (Coordinate3D){x, y + y_dim/2, z + z_dim/2};
+            *c = (Coordinate3D){x, y + y_dim/2, z - z_dim/2};
+            *d = (Coordinate3D){x, y - y_dim/2, z - z_dim/2};
+        break;
+        case 'y': //pyramid point is along the y axis
+            *a = (Coordinate3D){x + x_dim/2, y , z + z_dim/2};
+            *b = (Coordinate3D){x - x_dim/2, y, z + z_dim/2};
+            *c = (Coordinate3D){x + x_dim/2, y, z - z_dim/2};
+            *d = (Coordinate3D){x - x_dim/2, y, z - z_dim/2};
+        break;
+        case 'z':
+            *a = (Coordinate3D){x - x_dim/2, y + y_dim/2, z};
+            *b = (Coordinate3D){x + x_dim/2, y + y_dim/2, z};
+            *c = (Coordinate3D){x + x_dim/2, y - y_dim/2, z};
+            *d = (Coordinate3D){x - x_dim/2, y - y_dim/2, z};
+        break;
+    }
+}
 
 void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
     if (cur->next == NULL){ //this is ou
@@ -692,8 +627,9 @@ void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
         
     }
 }
+
 void Coordinate3D_write(FILE* file, Coordinate3D coord){
-    fprintf(file, "%.4f %.4f %.4f\n", coord.x, coord.y, coord.z);
+    fprintf(file, "%.5f %.5f %.5f\n", coord.x, coord.y, coord.z);
 }
 int exists(const char *fname){
     FILE *file;
@@ -724,25 +660,72 @@ void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
     if (file == NULL) {
         fprintf(stderr, "Opening file failed with code %d.\n", errno);
     }
-    Scene3D_print_stl_binary_header(scene, file);
-    Scene3D_print_stl_binary_triangle_count(scene, file);
+    Scene3D_write_stl_binary_header(scene, file);
+    Scene3D_write_stl_binary_triangle_count(scene, file);
+    
+    Scene3D_write_stl_binary_scene(scene, file);
+    
     fclose(file);
 }
 
-void Scene3D_print_stl_binary_header(Scene3D* scene, FILE* file){
+
+void Scene3D_write_stl_binary_header(Scene3D* scene, FILE* file){
     uint64_t zero  = 0; //8B
     for (int i = 0; i < 10; i++ ){
         fwrite(&zero, 1, sizeof(uint64_t), file);
     }
 }
 
-void Scene3D_print_stl_binary_triangle_count(Scene3D* scene, FILE* file){
+void Scene3D_write_stl_binary_triangle_count(Scene3D* scene, FILE* file){
     uint32_t count  = Scene3D_count_triangles(scene); //8B
     fwrite(&count, 1, sizeof(uint32_t), file);
-
+}
+void Scene3D_write_stl_binary_facet(Scene3D* scene, FILE* file){
+    
+    
+}
+void Scene3D_write_stl_binary_normal(FILE* file){
+    float zero=0;
+    for (int i = 0; i < 3; i++)
+        fwrite(&zero, 1, sizeof(float), file);
+}
+void Scene3D_write_stl_binary_scene(Scene3D* scene, FILE* file){
+    for (int i = 0; i < scene->count; i++){
+        Object3D_write_binary(scene->objects[i], file);
+    }
 }
 
- 
+
+void Object3D_write_binary(Object3D* obj, FILE* file){
+    if (obj->root == NULL)
+        return;
+    else{
+        Object3D_write_binary_helper(obj->root, 0, file);
+    }
+}
+void Object3D_write_binary_helper(Triangle3DNode* cur, int level, FILE* file){
+    if (cur == NULL){
+        return;
+    }
+    else{
+        Scene3D_write_stl_binary_normal(file);
+        Coordinate3D_write_binary( cur->triangle.a, file);
+        Coordinate3D_write_binary(cur->triangle.b, file);
+        Coordinate3D_write_binary(cur->triangle.c, file);
+        uint16_t end  = 0;
+        fwrite(&end, 1, sizeof(uint16_t), file);
+        Object3D_write_binary_helper(cur->next, level+1, file);
+    }
+}
+void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
+    float x = (float)coord.x;
+    float y = (float)coord.y;
+    float z = (float)coord.z;
+    fwrite(&x, 1, sizeof(float), file);
+    fwrite(&y, 1, sizeof(float), file);
+    fwrite(&z, 1, sizeof(float), file);
+}
+
 /*
  * This function should create a new Object3D on the heap and populate it with
  * a bunch of triangles to represent a cube-based fractal in 3D space.

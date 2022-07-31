@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
-
 #include <stdbool.h>
 
 /*
@@ -111,14 +110,15 @@ void Object3D_write(Object3D* obj, FILE* file);
 void Coordinate3D_write(FILE* file, Coordinate3D coord);
 
 /* helper funcs for Scene3D_write_stl_binary() */
-void Object3D_write_helper_binary(Triangle3DNode* cur, int level, FILE* file);
+void Object3D_write_binary_helper(Triangle3DNode* cur, int level, FILE* file);
 void Object3D_write_binary(Object3D* obj, FILE* file);
-
 void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
-void Coordinate3D_write_binary(FILE* file, Coordinate3D coord);
-void Scene3D_print_stl_binary_header(Scene3D* scene, FILE* file);
-void Scene3D_print_stl_binary_triangle_count(Scene3D* scene, FILE* file);
-
+void Coordinate3D_write_binary(Coordinate3D coord, FILE* file);
+void Scene3D_write_stl_binary_header(Scene3D* scene, FILE* file);
+void Scene3D_write_stl_binary_triangle_count(Scene3D* scene, FILE* file);
+void Scene3D_write_stl_binary_normal( FILE* file);
+void Scene3D_write_stl_binary_scene(Scene3D* scene, FILE* file);
+void Scene3D_write_stl_binary_facet(Scene3D* scene, FILE* file);
 Object3D* Object3D_create_pyramid(
     Coordinate3D origin,
     double width, double height, char* orientation);
@@ -156,6 +156,7 @@ Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle);
 
 void Coordinate3D_db_print(Coordinate3D coord);
 void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
+void Object3D_update_coords2(double x_dim, double y_dim, double z_dim, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d);
 void Object3D_db_print_helper(Triangle3DNode* cur, int level);
 void Object3D_db_print(Object3D* obj);
 void Scene3D_print(Scene3D* scene);
