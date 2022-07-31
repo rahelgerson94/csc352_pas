@@ -737,7 +737,7 @@ void Scene3D_print_stl_binary_header(Scene3D* scene, FILE* file){
 }
 
 void Scene3D_print_stl_binary_triangle_count(Scene3D* scene, FILE* file){
-    uint32_t count  = 44; //8B
+    uint32_t count  = Scene3D_count_triangles(scene); //8B
     fwrite(&count, 1, sizeof(uint32_t), file);
 
 }

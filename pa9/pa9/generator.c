@@ -45,10 +45,12 @@ int main(){
 #endif
     
 #ifdef test_print
-    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere_stl.bin";
-    Scene3D* sphere = Scene3D_create();
-    Scene3D_write_stl_binary(sphere, file_name);
-    Scene3D_destroy(sphere);
+    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/cube_stl.bin";
+    Scene3D* cube = Scene3D_create();
+    Object3D* cube_o = Object3D_create_cuboid(o, 10, 10, 10);
+    Scene3D_append(cube, cube_o);
+    Scene3D_write_stl_binary(cube, file_name);
+    Scene3D_destroy(cube);
 #endif
     
 }
