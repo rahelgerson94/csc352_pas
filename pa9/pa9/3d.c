@@ -737,27 +737,53 @@ void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
  *     levels: The number of levels to recurse to when building the fractal
  */
 Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels){
-    Object3D* cube = malloc(sizeof(Object3D));
-    if (levels == 0){
-        cube = Object3D_create_cuboid(origin, size, size, size);
-        return cube;
+    double smallest_size = size/(pow(2,levels-1));
+    Object3D* fractal = Object3D_create_fractal_helper(origin, size, smallest_size, NULL);
+    return fractal;
+}
+
+Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double smallest_size, double cur_size, Object3D* fractal){
+    Coordinate3D right, left, front, back, top, bottom;
+    Object3D* cube;
+    if (fractal == NULL){ //if fractal = null, we've just entered. initialize values
+        Object3D* fractal = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
+        Object3D_coord_shift(origin, 'x', 0, &right );
+        Object3D_coord_shift(origin, 'x', 0, &left );
+        Object3D_coord_shift(origin, 'y', 0, &front  );
+        Object3D_coord_shift(origin, 'y', 0, &back );
+        Object3D_coord_shift(origin, 'z', 0, &top );
+        Object3D_coord_shift(origin, 'z', 0, &bottom );
+    }
+    if (cur_size == smallest_size){
+        cube = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
+        Object3D_append(fractal, cube);
+        return fractal;
     }
     else{
         //right left, fwd, back, top, bottom;
-        //0        1    2    3    4   5
-        Coordinate3D faces[6];
-        char axes[6] = {'x', 'x', 'y', 'y', 'z', 'z'};
-        for (int i = 0; i < 6; i++){
-            size = size/2;
-            Object3D_coord_shift(origin, axes[i], size, &faces[i]);
-            Object3D_create_fractal(faces[i], size, levels-1);
-            Object3D_coord_shift(origin, axes[i], -size, &faces[i]);
-            Object3D_create_fractal(faces[i], -size, levels-1);
-        }
-        //FIXME
+       //0        1    2    3    4   5
+        Object3D_coord_shift(right, 'x', cur_size/2, &right);
+        Object3D_create_fractal_helper(right, smallest_size, cur_size/2, fractal);
+
+        Object3D_coord_shift(left, 'x', -cur_size/2, &left);
+        Object3D_create_fractal_helper(left, smallest_size, cur_size/2, fractal);
+        
+        Object3D_coord_shift(front, 'y', cur_size/2, &front);
+        Object3D_create_fractal_helper(front, smallest_size, cur_size/2, fractal);
+        
+        Object3D_coord_shift(back, 'y', -cur_size/2, &back);
+        Object3D_create_fractal_helper(back, smallest_size, cur_size/2, fractal);
+        
+        Object3D_coord_shift(top, 'z', cur_size/2, &top);
+        Object3D_create_fractal_helper(top, smallest_size, cur_size/2, fractal);
+        
+        Object3D_coord_shift(bottom, 'z', -cur_size/2, &bottom);
+        Object3D_create_fractal_helper(bottom, smallest_size, cur_size/2, fractal);
     }
-    return cube;
+    
+    return fractal;
 }
+
 
 /*
  * This function should create a new Object3D on the heap and populate it with
