@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "3d.h"
 
-//#define test_sphere
+#define test_sphere
 //#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
@@ -17,15 +17,15 @@
 
 //#define local
 char* file_name;
-
+#ifndef local
+    char* file_name = "out.stl";
+#endif
 
 int main(){
-//    Coordinate3D o = {0,0,0};
-//    Coordinate3D oz = {0,0,100};
+   Coordinate3D o = {0,0,0};
+    //Coordinate3D oz = {0,0,100};
 
-#ifndef local
-    file_name = "out.stl";
-#endif
+
 
 #ifdef test_sphere
     Scene3D* sphere = Scene3D_create();
@@ -34,7 +34,9 @@ int main(){
     Object3D* sphere_obj0 = Object3D_create_sphere(o, 50, 20);
     Scene3D_append(sphere, sphere_obj);
     Scene3D_append(sphere, sphere_obj0);
+#ifdef local
     file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere2.stl";
+#endif
     Scene3D_write_stl_text(sphere, file_name);
     Scene3D_destroy(sphere);
 #endif
@@ -142,9 +144,9 @@ int main(){
         Scene3D_append(star, object);
    }
 #ifdef local
-    Scene3D_write_stl_text(star, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/star.stl");
+    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/star.stl");
 #else
-    Scene3D_write_stl_text(star, "out.stl");
+    Scene3D_write_stl_text(star, file_name);
 #endif
     Scene3D_destroy(star);
 #endif //test_star
