@@ -86,7 +86,7 @@ int main(){
     Scene3D_write_stl_text(pyramid_s, "out.stl");
 #endif
     Scene3D_destroy(pyramid_s);
-#endif
+#endif //test_pyramid_valgrind
     
 #ifdef test_house
     double base_height, roof_height;

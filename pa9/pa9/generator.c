@@ -8,12 +8,14 @@
 #include <stdio.h>
 #include "3d.h"
 
-#define test_sphere
-#define test_fractal
+//#define test_sphere
+//#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
-#define test_cube2
-#define test_star
+//#define test_cube2
+#define test_pyramid_valgrind
+
+//#define test_star
 
 //#define local
 char* file_name;
@@ -23,7 +25,7 @@ char* file_name;
 
 int main(){
     Coordinate3D o = {0,0,0};
-    Coordinate3D oz = {0,0,100};
+    //Coordinate3D oz = {0,0,100};
 
 
 
@@ -52,7 +54,7 @@ int main(){
     //Scene3D_append(test_append, cube1);
     //Scene3D_append(test_append, cube2);
      //Scene3D_append(test_append, cube1);
-    //Scene3D_write_stl_text(test_append, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cubetest.stl");
+    //Scene3D_write_stl_text(test_append, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/cubetest.stl");
      //Scene3D_destroy(test_append);
     //Object3D_destroy(cube2);
     
@@ -126,7 +128,7 @@ int main(){
     
     Scene3D_append(cube2, cube2_o);
 #ifdef local
-    Scene3D_write_stl_text(cube2, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cuboid_origin20.stl");
+    Scene3D_write_stl_text(cube2, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/cuboid_origin20.stl");
 #else
     Scene3D_write_stl_text(cube2, "out.stl");
     
@@ -134,6 +136,20 @@ int main(){
     Scene3D_destroy(cube2);
 #endif //test_cube2
     
+
+#ifdef test_pyramid_valgrind
+    Scene3D* pyramid_s = Scene3D_create();
+    Object3D* pyramid_o = Object3D_create_pyramid(o, 6, 5, "backward");
+    Scene3D_append(pyramid_s, pyramid_o);
+#ifdef local
+    file_name= "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/pyramid_backward.stl";
+#else
+    file_name = "out.stl";
+#endif
+    Scene3D_write_stl_text(pyramid_s, file_name);
+    Scene3D_destroy(pyramid_s);
+#endif //test_pyramid_valgrind
+
 #ifdef test_star
     Scene3D* star = Scene3D_create();
     char* directions[] = {"up", "down", "left", "right", "forward", "backward"};
@@ -143,7 +159,7 @@ int main(){
         Scene3D_append(star, object);
    }
 #ifdef local
-    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/star.stl");
+    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/star.stl";
 #else
     Scene3D_write_stl_text(star, file_name);
 #endif
