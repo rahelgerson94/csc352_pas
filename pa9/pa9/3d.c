@@ -70,9 +70,9 @@ void Object3D_destroy(Object3D* obj){
 #endif
     Triangle3DNode* cur = obj->root; Triangle3DNode* temp = cur;
     for (int i = 0; i < obj->count; i++){
-        temp = cur;
+        temp = cur->next;
         free(cur);
-        cur = temp->next;
+        cur = temp;
     }
     free(obj);
 }
