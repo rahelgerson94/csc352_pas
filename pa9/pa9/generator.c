@@ -9,10 +9,13 @@
 #include "3d.h"
 
 //#define test_sphere
-#define test_fractal
+//#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
-#define local
+#define test_cube2
+#define test_star
+
+//#define local
 char* file_name;
 
 
@@ -114,5 +117,36 @@ int main(){
 #endif
     Scene3D_destroy(fracz_s);
 #endif //test_fractal
+
+#ifdef test_cube2
+    Scene3D* cube2 = Scene3D_create();
+    Coordinate3D o2 = {35,0,0};
+    Object3D* cube2_o = Object3D_create_cuboid(o2, 5, 10, 15);
+    
+    Scene3D_append(cube2, cube2_o);
+#ifdef local
+    Scene3D_write_stl_text(cube2, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/cuboid_origin20.stl");
+#else
+    Scene3D_write_stl_text(cube2, "out.stl");
+    
+#endif
+    Scene3D_destroy(cube2);
+#endif //test_cube2
+    
+#ifdef test_star
+    Scene3D* star = Scene3D_create();
+    char* directions[] = {"up", "down", "left", "right", "forward", "backward"};
+    Coordinate3D origin = (Coordinate3D){100, 100, 100};
+    for (int i = 0; i <= 5; i ++) {
+        Object3D* object = Object3D_create_pyramid(origin, 20, 30, directions[i]);
+        Scene3D_append(star, object);
+   }
+#ifdef local
+    Scene3D_write_stl_text(star, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa8/tests/star.stl");
+#else
+    Scene3D_write_stl_text(star, "out.stl");
+#endif
+    Scene3D_destroy(star);
+#endif //test_star
 }
     

@@ -147,7 +147,8 @@ void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D
  *     triangle: The triangle to append.
  */
 void Object3D_append_triangle(Object3D* object, Triangle3D triangle);
-
+void Object3D_insert_triangle(Object3D* this, Triangle3D triangle);
+void Object3D_insert(Object3D* a, Object3D* b);
 void Object3D_append_quadrilateral(Object3D* object,
                 Coordinate3D a, Coordinate3D b, Coordinate3D c, Coordinate3D d);
 void Object3D_destroy(Object3D* obj);

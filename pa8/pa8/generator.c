@@ -36,7 +36,7 @@ int main(){
     Scene3D_write_stl_text(star, "out.stl");
 #endif
     Scene3D_destroy(star);
-#endif
+#endif //test_star
 
 //test2
 #ifdef test_destroy
@@ -105,7 +105,7 @@ int main(){
     
 #endif
     Scene3D_destroy(house);
-#endif
+#endif //test_house
     
 //test7
 #ifdef test_cube2

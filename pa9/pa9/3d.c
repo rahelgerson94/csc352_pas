@@ -138,19 +138,19 @@ Object3D* Object3D_create_pyramid(
         
         //front
         Triangle3D front = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //right
         Triangle3D right = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, right );
+        Object3D_insert_triangle(pyramid, right );
         
         //back
         Triangle3D back = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, back );
+        Object3D_insert_triangle(pyramid, back );
         
         //left
         Triangle3D left = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, left );
+        Object3D_insert_triangle(pyramid, left );
     }//end up case
     
     else if (strcmp(orientation, "right") == 0){ //apex is along x-axis
@@ -159,20 +159,20 @@ Object3D* Object3D_create_pyramid(
         Object3D_coord_shift(origin, 'x', h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, top );
+        Object3D_insert_triangle(pyramid, top );
         
         //front
         Triangle3D front = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //bottom
         
         Triangle3D bottom = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, bottom );
+        Object3D_insert_triangle(pyramid, bottom );
         
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, back);
+        Object3D_insert_triangle(pyramid, back);
     } //right
     else if (strcmp(orientation, "down") == 0){
         Object3D_update_coords(w, w, 'z', origin, &a, &b, &c, &d);
@@ -181,19 +181,19 @@ Object3D* Object3D_create_pyramid(
         
         //front
         Triangle3D front = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //right
         Triangle3D right = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, right );
+        Object3D_insert_triangle(pyramid, right );
         
         //back
         Triangle3D back = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, back );
+        Object3D_insert_triangle(pyramid, back );
         
         //left
         Triangle3D left = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, left );
+        Object3D_insert_triangle(pyramid, left );
     } //down
     else if (strcmp(orientation, "left") == 0){
         Object3D_update_coords(w, w, 'x', origin, &a, &b, &c, &d);
@@ -201,20 +201,20 @@ Object3D* Object3D_create_pyramid(
         Object3D_coord_shift(origin, 'x', -h, &tip);
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, top );
+        Object3D_insert_triangle(pyramid, top );
         
         //front
         Triangle3D front = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //bottom
         
         Triangle3D bottom = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, bottom );
+        Object3D_insert_triangle(pyramid, bottom );
         
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, back);
+        Object3D_insert_triangle(pyramid, back);
     } //left
     else if (strcmp(orientation, "forward") == 0){
         Object3D_update_coords(w, w, 'y', origin, &a, &b, &c, &d);
@@ -222,20 +222,20 @@ Object3D* Object3D_create_pyramid(
         Object3D_coord_shift(origin, 'y', h, &tip); //apex along x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, top );
+        Object3D_insert_triangle(pyramid, top );
         
         //front
         Triangle3D front = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //bottom
         
         Triangle3D bottom = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, bottom );
+        Object3D_insert_triangle(pyramid, bottom );
         
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, back);
+        Object3D_insert_triangle(pyramid, back);
    
     } //forward
     
@@ -245,20 +245,20 @@ Object3D* Object3D_create_pyramid(
         Object3D_coord_shift(origin, 'y', -h, &tip); //apex along the x
         //top
         Triangle3D top = (Triangle3D){a,b,tip};
-        Object3D_append_triangle(pyramid, top );
+        Object3D_insert_triangle(pyramid, top );
         
         //front
         Triangle3D front = (Triangle3D){b,c,tip};
-        Object3D_append_triangle(pyramid, front );
+        Object3D_insert_triangle(pyramid, front );
         
         //bottom
         
         Triangle3D bottom = (Triangle3D){c,d,tip};
-        Object3D_append_triangle(pyramid, bottom );
+        Object3D_insert_triangle(pyramid, bottom );
         
         //back
         Triangle3D back = (Triangle3D){a,d,tip};
-        Object3D_append_triangle(pyramid, back);
+        Object3D_insert_triangle(pyramid, back);
     } //backward
     else{
         printf("enter a valid orientation\n");
@@ -394,6 +394,24 @@ void Object3D_append_triangle(Object3D* this, Triangle3D triangle){
 #endif
 }
 
+/* tthis fct inserts a node at the front of a LL*/
+void Object3D_insert_triangle(Object3D* this, Triangle3D triangle){
+    Triangle3DNode* head_tmp = this->root; //store root
+    Triangle3DNode* new_node = Triangle3DNode_create_node(triangle);
+    if (head_tmp == NULL){
+        this->root = new_node;
+    }
+    else{
+        this->root = new_node;
+        new_node->next = head_tmp;
+        head_tmp = new_node;
+        //head_tmp->next = NULL;
+    }
+    this->count++;
+    
+   
+}
+
 
 
 Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle){
@@ -420,12 +438,13 @@ void Object3D_append_quadrilateral(
          Triangle3D triangle_4 = (Triangle3D) {a, b, d};
     
 #ifdef db_quad
-    print_db_fct("Object3D_append_quadrilateral");
+    //print_db_fct("Object3D_append_quadrilateral");
+    print_db_fct("Object3D_insert_quadrilateral");
 #endif
-    Object3D_append_triangle(object, triangle_1);
-    Object3D_append_triangle(object, triangle_2);
-    Object3D_append_triangle(object, triangle_3);
-    Object3D_append_triangle(object, triangle_4);
+    Object3D_insert_triangle(object, triangle_1);
+    Object3D_insert_triangle(object, triangle_2);
+    Object3D_insert_triangle(object, triangle_3);
+    Object3D_insert_triangle(object, triangle_4);
 #ifdef db_quad
     Object3D_db_print(object);
 #endif
@@ -647,8 +666,6 @@ int exists(const char *fname){
     return 0;
 }
 
-void Object3D_append_triangle(
-    Object3D* object, Triangle3D triangle);
 
 /*
  * Write every shape from the Scene3D to the file with file_name using the STL
@@ -678,13 +695,13 @@ void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
 void Scene3D_write_stl_binary_header(Scene3D* scene, FILE* file){
     uint64_t zero  = 0; //8B
     for (int i = 0; i < 10; i++ ){
-        fwrite(&zero, 1, sizeof(uint64_t), file);
+        fwrite(&zero, sizeof(uint64_t), 1, file);
     }
 }
 
 void Scene3D_write_stl_binary_triangle_count(Scene3D* scene, FILE* file){
     uint32_t count  = Scene3D_count_triangles(scene); //8B
-    fwrite(&count, 1, sizeof(uint32_t), file);
+    fwrite(&count,  sizeof(uint32_t), 1, file);
 }
 void Scene3D_write_stl_binary_facet(Scene3D* scene, FILE* file){
     
@@ -719,7 +736,7 @@ void Object3D_write_binary_helper(Triangle3DNode* cur, int level, FILE* file){
         Coordinate3D_write_binary(cur->triangle.b, file);
         Coordinate3D_write_binary(cur->triangle.c, file);
         uint16_t end  = 0;
-        fwrite(&end, 1, sizeof(uint16_t), file);
+        fwrite(&end, sizeof(uint16_t), 1, file);
         Object3D_write_binary_helper(cur->next, level+1, file);
     }
 }
@@ -727,9 +744,9 @@ void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
     float x = (float)coord.x;
     float y = (float)coord.y;
     float z = (float)coord.z;
-    fwrite(&x, 1, sizeof(float), file);
-    fwrite(&y, 1, sizeof(float), file);
-    fwrite(&z, 1, sizeof(float), file);
+    fwrite(&x, sizeof(float), 1, file);
+    fwrite(&y, sizeof(float), 1, file);
+    fwrite(&z, sizeof(float), 1, file);
 }
 
 /*
@@ -877,6 +894,12 @@ void Object3D_append(Object3D* a, Object3D* b){
         curr = curr->next;
     }
     Object3D_destroy(b);
+}
+
+/* insert b in front of a like this: []*/
+void Object3D_insert(Object3D* a, Object3D* b){
+    //b->root = a->root;
+    a->root = b->root;
 }
 
 /* count the number of triangle nodes in an object's LL*/
