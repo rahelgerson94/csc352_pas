@@ -12,7 +12,7 @@
 #define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
-#define local
+//#define local
 char* file_name;
 
 
@@ -88,7 +88,8 @@ int main(){
 //    FILE* coord3d_test= fopen(coord3d_fname, "wb+");
 //    Coordinate3D_write_binary(test_coord, coord3d_test);
 //    fclose(coord3d_test);
-#endif
+#endif //test_print
+    
 #ifdef test_fractal
 #ifdef local
     char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal.stl";
@@ -105,8 +106,13 @@ int main(){
 
     Scene3D* fracz_s = Scene3D_create();
     Scene3D_append(fracz_s, fracz);
+
+#ifdef local
     Scene3D_write_stl_binary(fracz_s, file_namez);
-    Scene3D_destroy(fracz_s);
+#else
+    Scene3D_write_stl_binary(fracz_s, file_name);
 #endif
+    Scene3D_destroy(fracz_s);
+#endif //test_fractal
 }
     
