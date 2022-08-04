@@ -683,20 +683,31 @@ void Scene3D_write_stl_binary(Scene3D* scene, char* file_name){
     if (file == NULL) {
         fprintf(stderr, "Opening file failed with code %d.\n", errno);
     }
-    Scene3D_write_stl_binary_header(scene, file);
-    Scene3D_write_stl_binary_triangle_count(scene, file);
-    
-    Scene3D_write_stl_binary_scene(scene, file);
-    
+    //Scene3D_write_stl_binary_header(scene, file);
+    uint64_t zero  = 0; //8B
+    for (int i = 0; i < 10; i++ )
+        fwrite(&zero, sizeof(uint64_t), 1, file);
+
+    //Scene3D_write_stl_binary_triangle_count(scene, file);
+    uint32_t count  = Scene3D_count_triangles(scene); //8B
+    fwrite(&count,  sizeof(uint32_t), 1, file);
+    //Scene3D_write_stl_binary_scene(scene, file);
+    for (int i = 0; i < scene->count; i++){
+        //Object3D_write_binary(scene->objects[i], file);
+        if (scene->objects[i]->root == NULL)
+            return;
+        else
+            //Object3D_write_binary_helper(scene->objects[i]->root, 0, file);
+            Object3D_write_binary(scene->objects[i], file);
+    }
     fclose(file);
 }
 
 
 void Scene3D_write_stl_binary_header(Scene3D* scene, FILE* file){
     uint64_t zero  = 0; //8B
-    for (int i = 0; i < 10; i++ ){
+    for (int i = 0; i < 10; i++ )
         fwrite(&zero, sizeof(uint64_t), 1, file);
-    }
 }
 
 void Scene3D_write_stl_binary_triangle_count(Scene3D* scene, FILE* file){
@@ -719,27 +730,44 @@ void Scene3D_write_stl_binary_scene(Scene3D* scene, FILE* file){
 }
 
 
+//void Object3D_write_binary(Object3D* obj, FILE* file){
+//    if (obj->root == NULL)
+//        return;
+//    else
+//        Object3D_write_binary_helper(obj->root, 0, file);
+//
+//}
+//void Object3D_write_binary_helper(Triangle3DNode* cur, int level, FILE* file){
+//    if (cur == NULL){
+//        return;
+//    }
+//    else{
+//        //Scene3D_write_stl_binary_normal(file);
+//        float zero=0;
+//        for (int i = 0; i < 3; i++)
+//            fwrite(&zero, 1, sizeof(float), file);
+//
+//        Coordinate3D_write_binary( cur->triangle.a, file);
+//        Coordinate3D_write_binary(cur->triangle.b, file);
+//        Coordinate3D_write_binary(cur->triangle.c, file);
+//        uint16_t end  = 0;
+//        fwrite(&end, sizeof(uint16_t), 1, file);
+//        Object3D_write_binary_helper(cur->next, level+1, file);
+//    }
+//}
 void Object3D_write_binary(Object3D* obj, FILE* file){
-    if (obj->root == NULL)
-        return;
-    else{
-        Object3D_write_binary_helper(obj->root, 0, file);
-    }
-}
-void Object3D_write_binary_helper(Triangle3DNode* cur, int level, FILE* file){
-    if (cur == NULL){
-        return;
-    }
-    else{
+    Triangle3DNode* cur = obj->root;
+    for (int i = 0; i < obj->count; i++){
         Scene3D_write_stl_binary_normal(file);
         Coordinate3D_write_binary( cur->triangle.a, file);
         Coordinate3D_write_binary(cur->triangle.b, file);
         Coordinate3D_write_binary(cur->triangle.c, file);
         uint16_t end  = 0;
         fwrite(&end, sizeof(uint16_t), 1, file);
-        Object3D_write_binary_helper(cur->next, level+1, file);
+        cur = cur->next;
     }
 }
+
 void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
     float x = (float)coord.x;
     float y = (float)coord.y;
