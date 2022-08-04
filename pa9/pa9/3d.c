@@ -869,37 +869,26 @@ int Scene3D_count_triangles(Scene3D* this){
     return tot_tris;
 }
 
-///* append b to a like this: [a,b]*/
-//void Object3D_append(Object3D* a, Object3D* b){
-//    Triangle3DNode* temp;
-//    seek(a, temp);
-//}
-////go to last node in a ll
-//void seek(Triangle3DNode* a, Triangle3DNode* tail){
-//    if (a->next == NULL){
-//        tail = a;
-//        return;
-//    }
-//    else
-//        seek(a->next, tail);
-//}
 
 /* append b to a like this: [a,b]
  */
 
+//void Object3D_append(Object3D* a, Object3D* b){
+//    Triangle3DNode* curr = b->root;
+//    for (int i = 0; i < b->count; i++){
+//        Object3D_append_triangle(a, curr->triangle);
+//        curr = curr->next;
+//    }
+//    Object3D_destroy(b);
+//}
+
 void Object3D_append(Object3D* a, Object3D* b){
     Triangle3DNode* curr = b->root;
     for (int i = 0; i < b->count; i++){
-        Object3D_append_triangle(a, curr->triangle);
+        Object3D_insert_triangle(a, curr->triangle);
         curr = curr->next;
     }
     Object3D_destroy(b);
-}
-
-/* insert b in front of a like this: []*/
-void Object3D_insert(Object3D* a, Object3D* b){
-    //b->root = a->root;
-    a->root = b->root;
 }
 
 /* count the number of triangle nodes in an object's LL*/
