@@ -90,7 +90,7 @@ int main(){
     char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal_3_levels.stl";
 #endif
     
-    Object3D* frac = Object3D_create_fractal(o, 16, 3);
+    Object3D* frac = Object3D_create_fractal(o, 16, 2);
     Scene3D* frac_s = Scene3D_create();
     Scene3D_append(frac_s, frac);
     Scene3D_write_stl_binary(frac_s, file_name);
