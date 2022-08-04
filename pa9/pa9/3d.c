@@ -43,11 +43,36 @@ void Scene3D_destroy(Scene3D* scene){
     free(scene->objects);
     free(scene);
 }
+//void Object3D_destroy(Object3D* obj){
+//#ifdef db_destroy
+//    print_db_fct("Object3D_destroy");
+//#endif
+//    Object3D_destroy_helper(obj->root);
+//    free(obj);
+//}
+//
+///*frees each node in the linked list*/
+//void Object3D_destroy_helper(Triangle3DNode* cur){
+//    if (cur->next == NULL){
+//        free(cur);
+//        return;
+//    }
+//    else {
+//        Triangle3DNode* temp = cur->next;
+//        free(cur);
+//        Object3D_destroy_helper(temp);
+//    }
+//}
+
 void Object3D_destroy(Object3D* obj){
 #ifdef db_destroy
     print_db_fct("Object3D_destroy");
 #endif
-    Object3D_destroy_helper(obj->root);
+    Triangle3DNode* cur = obj->root;
+    for (int i = 0; i < obj->count; i++){
+        free(cur);
+        cur = cur->next;
+    }
     free(obj);
 }
 
@@ -63,6 +88,7 @@ void Object3D_destroy_helper(Triangle3DNode* cur){
         Object3D_destroy_helper(temp);
     }
 }
+
 /*
  * Appends a new object to the end of the Scene3D's array of objects.
  * This function is responsible for handling the dynamic growing of the array
