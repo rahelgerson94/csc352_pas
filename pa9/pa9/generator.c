@@ -13,7 +13,7 @@
 //#define test_Object3D_append_helper
 //#define test_print
 #define test_cube2
-//#define test_star
+#define test_star
 
 //#define local
 char* file_name;
