@@ -68,10 +68,11 @@ void Object3D_destroy(Object3D* obj){
 #ifdef db_destroy
     print_db_fct("Object3D_destroy");
 #endif
-    Triangle3DNode* cur = obj->root;
+    Triangle3DNode* cur = obj->root; Triangle3DNode* temp = cur;
     for (int i = 0; i < obj->count; i++){
+        temp = cur;
         free(cur);
-        cur = cur->next;
+        cur = temp->next;
     }
     free(obj);
 }
