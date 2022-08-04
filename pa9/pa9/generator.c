@@ -15,7 +15,7 @@
 #define test_cube2
 //#define test_star
 
-//#define local
+#define local
 char* file_name;
 #ifndef local
     char* file_name = "out.stl";
