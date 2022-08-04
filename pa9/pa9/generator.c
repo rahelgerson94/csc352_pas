@@ -9,14 +9,17 @@
 #include "3d.h"
 
 #define test_sphere
+#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
-//#define local
+#define local
 char* file_name;
 
 
 int main(){
     Coordinate3D o = {0,0,0};
+    Coordinate3D oz = {0,0,100};
+
 #ifndef local
     file_name = "out.stl";
 #endif
@@ -40,6 +43,7 @@ int main(){
     
     Object3D_append(cube1, cube2);
     Object3D_db_print(cube1);
+    
      //Scene3D* test_append = Scene3D_create();
     //Scene3D_append(test_append, cube1);
     //Scene3D_append(test_append, cube2);
@@ -62,6 +66,7 @@ int main(){
     #endif
     Scene3D* cube = Scene3D_create();
     Object3D* cube_o = Object3D_create_cuboid(o, 10, 10, 10);
+    
     Scene3D_append(cube, cube_o);
     
     Scene3D_write_stl_binary(cube, "out.stl");
@@ -84,6 +89,24 @@ int main(){
 //    Coordinate3D_write_binary(test_coord, coord3d_test);
 //    fclose(coord3d_test);
 #endif
-    
+#ifdef test_fractal
+#ifdef local
+    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal.stl";
+#endif
+    Object3D* frac = Object3D_create_fractal(o, 16, 3);
+    Scene3D* frac_s = Scene3D_create();
+    Scene3D_append(frac_s, frac);
+    Scene3D_write_stl_binary(frac_s, file_name);
+    Scene3D_destroy(frac_s);
+#ifdef local
+    char* file_namez = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal_z.stl";
+#endif
+    Object3D* fracz = Object3D_create_fractal(oz, 16, 3);
+
+    Scene3D* fracz_s = Scene3D_create();
+    Scene3D_append(fracz_s, fracz);
+    Scene3D_write_stl_binary(fracz_s, file_namez);
+    Scene3D_destroy(fracz_s);
+#endif
 }
     

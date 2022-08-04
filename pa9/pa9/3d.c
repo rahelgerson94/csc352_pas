@@ -738,49 +738,52 @@ void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
  */
 Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels){
     double smallest_size = size/(pow(2,levels-1));
-    Object3D* fractal = Object3D_create_fractal_helper(origin, size, smallest_size, NULL);
+    Object3D* fractal = Object3D_create_fractal_helper(origin, smallest_size, size );
     return fractal;
 }
 
-Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double smallest_size, double cur_size, Object3D* fractal){
-    Coordinate3D right, left, front, back, top, bottom;
-    Object3D* cube;
-    if (fractal == NULL){ //if fractal = null, we've just entered. initialize values
-        Object3D* fractal = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
-        Object3D_coord_shift(origin, 'x', 0, &right );
-        Object3D_coord_shift(origin, 'x', 0, &left );
-        Object3D_coord_shift(origin, 'y', 0, &front  );
-        Object3D_coord_shift(origin, 'y', 0, &back );
-        Object3D_coord_shift(origin, 'z', 0, &top );
-        Object3D_coord_shift(origin, 'z', 0, &bottom );
-    }
+Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double smallest_size, double cur_size){
+    Object3D* fractal;
+    Object3D* right;
+    Object3D* left;
+    Object3D* front;
+    Object3D* back;
+    Object3D* top;
+    Object3D* bottom;
+    Coordinate3D origin_temp;
     if (cur_size == smallest_size){
-        cube = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
-        Object3D_append(fractal, cube);
+        fractal = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
         return fractal;
     }
-    else{
-        //right left, fwd, back, top, bottom;
-       //0        1    2    3    4   5
-        Object3D_coord_shift(right, 'x', cur_size/2, &right);
-        Object3D_create_fractal_helper(right, smallest_size, cur_size/2, fractal);
 
-        Object3D_coord_shift(left, 'x', -cur_size/2, &left);
-        Object3D_create_fractal_helper(left, smallest_size, cur_size/2, fractal);
-        
-        Object3D_coord_shift(front, 'y', cur_size/2, &front);
-        Object3D_create_fractal_helper(front, smallest_size, cur_size/2, fractal);
-        
-        Object3D_coord_shift(back, 'y', -cur_size/2, &back);
-        Object3D_create_fractal_helper(back, smallest_size, cur_size/2, fractal);
-        
-        Object3D_coord_shift(top, 'z', cur_size/2, &top);
-        Object3D_create_fractal_helper(top, smallest_size, cur_size/2, fractal);
-        
-        Object3D_coord_shift(bottom, 'z', -cur_size/2, &bottom);
-        Object3D_create_fractal_helper(bottom, smallest_size, cur_size/2, fractal);
-    }
+    //right left, fwd, back, top, bottom;
+   //0        1    2    3    4   5
+    fractal = Object3D_create_cuboid(origin, cur_size, cur_size, cur_size);
     
+    Object3D_coord_shift(origin, 'x', cur_size/2, &origin_temp);
+    right = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, right);
+    
+    Object3D_coord_shift(origin, 'x', -cur_size/2, &origin_temp);
+    left = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, left);
+    
+    Object3D_coord_shift(origin, 'y', cur_size/2, &origin_temp);
+    front = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, front);
+    
+    Object3D_coord_shift(origin, 'y', -cur_size/2, &origin_temp);
+    back = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, back);
+    
+    Object3D_coord_shift(origin, 'z', cur_size/2, &origin_temp);
+    top = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, top);
+    
+    Object3D_coord_shift(origin, 'z', -cur_size/2, &origin_temp);
+    bottom = Object3D_create_fractal_helper(origin_temp, smallest_size, cur_size/2);
+    Object3D_append(fractal, bottom);
+    //
     return fractal;
 }
 
@@ -798,7 +801,7 @@ Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double smallest_si
  *
  */
 Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment){
-    Object3D* sphere = malloc(1*(sizeof(Object3D*)));
+    Object3D* sphere = malloc(1*(sizeof(Object3D)));
     sphere->count = 0;
     sphere->root = NULL;
     Coordinate3D a, b, c, d;
@@ -862,11 +865,22 @@ int Scene3D_count_triangles(Scene3D* this){
  */
 
 void Object3D_append(Object3D* a, Object3D* b){
+    Triangle3DNode* curr = b->root;
     for (int i = 0; i < b->count; i++){
-        Triangle3DNode* curr = b->root;
         Object3D_append_triangle(a, curr->triangle);
-        curr = b->root->next;
+        curr = curr->next;
     }
     Object3D_destroy(b);
+}
+
+/* count the number of triangle nodes in an object's LL*/
+int Object3D_length(Object3D* this){
+    int count = 0;
+    Triangle3DNode* curr = this->root;
+    while(curr != NULL){
+        count++;
+        curr = curr->next;
+    }
+    return count;
 }
 

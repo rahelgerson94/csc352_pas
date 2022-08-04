@@ -168,7 +168,7 @@ void print_spaces(int num);
 void print_db_fct(char* name);
 
 Object3D* Object3D_create_fractal(Coordinate3D origin, double size, int levels);
-Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double orig_size, double cur_size, Object3D* fractal);
+Object3D* Object3D_create_fractal_helper(Coordinate3D origin, double orig_size, double cur_size);
 Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double increment);
 void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double theta, double phi, Coordinate3D* out);
 void Scene3D_write_stl_binary(Scene3D* scene, char* file_name);
@@ -176,5 +176,5 @@ double to_degrees(double in);
 int Scene3D_count_triangles(Scene3D* this);
 void Object3D_append(Object3D* o1, Object3D* o2);
 void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b);
-
+int Object3D_length(Object3D* this);
 #endif
