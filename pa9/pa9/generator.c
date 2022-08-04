@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include "3d.h"
 
-#define test_sphere
+//#define test_sphere
 #define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
-#define test_cube2
-#define test_pyramid_valgrind
+//#define test_cube2
+//#define test_pyramid_valgrind
 
 //#define test_star
 
