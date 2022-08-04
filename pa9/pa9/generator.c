@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "3d.h"
 
-#define test_sphere
+//#define test_sphere
 #define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
@@ -94,6 +94,7 @@ int main(){
 #ifdef local
     char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal.stl";
 #endif
+    
     Object3D* frac = Object3D_create_fractal(o, 16, 3);
     Scene3D* frac_s = Scene3D_create();
     Scene3D_append(frac_s, frac);
@@ -103,7 +104,6 @@ int main(){
     char* file_namez = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal_z.stl";
 #endif
     Object3D* fracz = Object3D_create_fractal(oz, 16, 3);
-
     Scene3D* fracz_s = Scene3D_create();
     Scene3D_append(fracz_s, fracz);
 

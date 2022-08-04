@@ -10,6 +10,7 @@
 //#define db_o_destroy
 //#define db_s_destroy
 //#define db_s_append
+#define db_write_bin
 
 /*
  * This function allocates space for a new Scene3D object on the heap,
@@ -576,6 +577,10 @@ void Object3D_print_helper(Triangle3DNode* cur, int level){
  */
 void Scene3D_write_stl_text(Scene3D* scene, char* file_name){
     /* check if file already exists, if it does remove it*/
+#ifdef db_write_bin
+    print_db_fct("Scene3D_write_stl_text");
+    printf("%s\n", file_name);
+#endif
     if (exists(file_name)){
         remove(file_name);
 //        if (remove(file_name) == 0)
