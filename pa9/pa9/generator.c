@@ -20,8 +20,8 @@ char* file_name;
 
 
 int main(){
-    Coordinate3D o = {0,0,0};
-    Coordinate3D oz = {0,0,100};
+//    Coordinate3D o = {0,0,0};
+//    Coordinate3D oz = {0,0,100};
 
 #ifndef local
     file_name = "out.stl";
