@@ -13,11 +13,11 @@
 //#define test_Object3D_append_helper
 //#define test_print
 #define test_cube2
-//#define test_pyramid_valgrind
+#define test_pyramid_valgrind
 
 //#define test_star
 
-#define local
+//#define local
 char* file_name;
 #ifndef local
     char* file_name = "out.stl";
@@ -87,10 +87,10 @@ int main(){
     
 #ifdef test_fractal
 #ifdef local
-    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal_7_levels.stl";
+    char* file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/fractal_3_levels.stl";
 #endif
     
-    Object3D* frac = Object3D_create_fractal(o, 16, 7);
+    Object3D* frac = Object3D_create_fractal(o, 16, 3);
     Scene3D* frac_s = Scene3D_create();
     Scene3D_append(frac_s, frac);
     Scene3D_write_stl_binary(frac_s, file_name);
