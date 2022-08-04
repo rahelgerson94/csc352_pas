@@ -10,7 +10,7 @@
 //#define db_o_destroy
 //#define db_s_destroy
 //#define db_s_append
-#define db_write_bin
+//#define db_write_bin
 
 /*
  * This function allocates space for a new Scene3D object on the heap,
