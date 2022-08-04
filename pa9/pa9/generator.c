@@ -9,28 +9,27 @@
 #include "3d.h"
 
 #define test_sphere
-//#define test_fractal
+#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
 #define test_cube2
 //#define test_star
 
-#define local
+//#define local
 char* file_name;
 #ifndef local
     char* file_name = "out.stl";
 #endif
 
 int main(){
-   Coordinate3D o = {0,0,0};
-    //Coordinate3D oz = {0,0,100};
+    Coordinate3D o = {0,0,0};
+    Coordinate3D oz = {0,0,100};
 
 
 
 #ifdef test_sphere
     Scene3D* sphere = Scene3D_create();
-    Coordinate3D o1 = {0,0,100};
-    Object3D* sphere_obj = Object3D_create_sphere(o1, 50, 20);
+    Object3D* sphere_obj = Object3D_create_sphere(oz, 50, 20);
     Object3D* sphere_obj0 = Object3D_create_sphere(o, 50, 20);
     Scene3D_append(sphere, sphere_obj);
     Scene3D_append(sphere, sphere_obj0);
