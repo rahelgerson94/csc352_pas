@@ -8,26 +8,31 @@
 #include <stdio.h>
 #include "3d.h"
 
-//#define test_sphere
-#define test_fractal
+#define test_sphere
+//#define test_fractal
 //#define test_Object3D_append_helper
 //#define test_print
 //#define test_cube2
-#define test_pyramid_valgrind
-
+//#define test_pyramid_valgrind
+//#define db_round
 //#define test_star
 
-//#define local
+#define local
 char* file_name;
 #ifndef local
     char* file_name = "out.stl";
 #endif
 
 int main(){
+#ifdef db_round
+    double pi = 3.14159;
+    for (int i = 1; i < 5; i ++)
+        printf("%d: %f\n", i, round_double(pi, i));
+#endif
     Coordinate3D o = {0,0,0};
     //Coordinate3D ox = {0,0,100};
     Coordinate3D oy = {0,100,0};
-    //Coordinate3D oz = {100,0,0};
+    Coordinate3D oz = {100,0,0};
 
 
 
@@ -38,7 +43,7 @@ int main(){
     Scene3D_append(sphere, sphere_obj);
     Scene3D_append(sphere, sphere_obj0);
 #ifdef local
-    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere2.stl";
+    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere.stl";
 #endif
     Scene3D_write_stl_text(sphere, file_name);
     Scene3D_destroy(sphere);
@@ -154,5 +159,8 @@ int main(){
 #endif
     Scene3D_destroy(star);
 #endif //test_star
-}
     
+    
+    
+}
+

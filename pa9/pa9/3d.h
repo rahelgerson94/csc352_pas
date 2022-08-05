@@ -177,4 +177,7 @@ int Scene3D_count_triangles(Scene3D* this);
 void Object3D_append(Object3D* o1, Object3D* o2);
 void Object3D_append_helper(Triangle3DNode* a, Triangle3DNode* b);
 int Object3D_length(Object3D* this);
+float round_float(float in_, int precision);
+double round_double(double in_, int precision);
+
 #endif

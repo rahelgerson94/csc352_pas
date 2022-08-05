@@ -907,9 +907,9 @@ void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double the
      these funcs expect DEGREES */
     theta = to_degrees(theta);
     phi = to_degrees(phi);
-    (*out).x = (radius * sin(theta) * cos(phi)) + origin.x ;
-    (*out).y = (radius * sin(theta) * sin(phi)) + origin.y;
-    (*out).z = (radius * cos(theta)) + origin.z ;
+    (*out).x = round_double((radius * sin(theta) * cos(phi)) + origin.x , 4);
+    (*out).y = round_double((radius * sin(theta) * sin(phi)) + origin.y ,4 );
+    (*out).z = round_double((radius * cos(theta)) + origin.z  , 4);
 }
 
 double to_degrees(double in){
@@ -957,3 +957,15 @@ int Object3D_length(Object3D* this){
     return count;
 }
 
+/* round in to precision decimal places
+inputs:
+    in, the number to be rounded
+    precision: the number of decimals to round to
+ output: the rounded number */
+double round_double(double in, int precision){    
+    double factor = pow(10,precision);
+    int a = (int)((in + (.5/factor)) * factor);
+    double res = (a/factor);
+    return res;
+}
+    
