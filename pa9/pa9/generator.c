@@ -1,9 +1,11 @@
-//
-//  generator.c
-//  pa9
-//
-//  Created by Rahel Gerson on 7/25/22.
-//
+/*
+ Rahel Gerson
+ csc352
+ pa9 extends the functionalitty of pa8 by adding three new functions:
+ create_fractal,
+ write_stl_binary
+ create_sphere
+ */
 
 #include <stdio.h>
 #include "3d.h"
@@ -14,10 +16,10 @@
 //#define test_print
 //#define test_cube2
 //#define test_pyramid_valgrind
-//#define db_round
+#define db_round
 //#define test_star
 
-#define local
+//#define local
 char* file_name;
 #ifndef local
     char* file_name = "out.stl";
@@ -25,28 +27,60 @@ char* file_name;
 
 int main(){
 #ifdef db_round
-    double pi = 3.14159;
-    for (int i = 1; i < 5; i ++)
-        printf("%d: %f\n", i, round_double(pi, i));
+    //double x = 0.00004;
+    double x  = 0.00015;
+    //x = 0.00012;
+     x = 0.00004;
+    int prec = 4;
+    //printf("%f\n", fmod(50.125553, 10000.0));
+
+    printf("%d: %.5f\n", prec, round_double(x, prec));
+//    for (int i = 1; i <= 5; i ++)
+//        printf("%d: %.5f\n", i, round_double(x, i));
 #endif
     Coordinate3D o = {0,0,0};
-    //Coordinate3D ox = {0,0,100};
+    Coordinate3D oz = {0,0,100};
     Coordinate3D oy = {0,100,0};
-    Coordinate3D oz = {100,0,0};
+    Coordinate3D ox = {100,0,0};
 
 
 
 #ifdef test_sphere
     Scene3D* sphere = Scene3D_create();
-    Object3D* sphere_obj = Object3D_create_sphere(oz, 50, 20);
+    Object3D* sphere_objx = Object3D_create_sphere(ox, 50, 20);
     Object3D* sphere_obj0 = Object3D_create_sphere(o, 50, 20);
-    Scene3D_append(sphere, sphere_obj);
+    Scene3D_append(sphere, sphere_objx);
     Scene3D_append(sphere, sphere_obj0);
 #ifdef local
-    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere.stl";
+    file_name = "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/spherex.stl";
 #endif
     Scene3D_write_stl_text(sphere, file_name);
     Scene3D_destroy(sphere);
+    
+    sphere = Scene3D_create();
+    sphere_obj0 = Object3D_create_sphere(o, 50, 20);
+    Object3D* sphere_objy = Object3D_create_sphere(oy, 50, 20);
+    Scene3D_append(sphere, sphere_objy);
+    Scene3D_append(sphere, sphere_obj0);
+    Scene3D_write_stl_text(sphere, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/spherey.stl");
+    
+    Scene3D_write_stl_text(sphere, file_name);
+    Scene3D_destroy(sphere);
+    
+    sphere = Scene3D_create();
+    Object3D* sphere_objz = Object3D_create_sphere(oz, 50, 20);
+    sphere_obj0 = Object3D_create_sphere(o, 50, 20);
+    Scene3D_append(sphere, sphere_objz);
+    Scene3D_append(sphere, sphere_obj0);
+    Scene3D_write_stl_text(sphere, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/spherez.stl");
+    Scene3D_destroy(sphere);
+    
+    sphere = Scene3D_create();
+    Object3D* sphere90 = Object3D_create_sphere(o, 100, 90);
+    Scene3D_append(sphere, sphere90);
+    Scene3D_write_stl_text(sphere, "/Users/rahelmizrahi/Library/Mobile Documents/com~apple~CloudDocs/csc352_pas/pa9/tests/sphere90.stl");
+    Scene3D_destroy(sphere);
+    
 #endif
 #ifdef test_Object3D_append_helper
     
@@ -159,8 +193,5 @@ int main(){
 #endif
     Scene3D_destroy(star);
 #endif //test_star
-    
-    
-    
 }
 

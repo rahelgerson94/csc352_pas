@@ -43,6 +43,7 @@ void Scene3D_destroy(Scene3D* scene){
     free(scene->objects);
     free(scene);
 }
+/* recursively destroy an object */
 //void Object3D_destroy(Object3D* obj){
 //#ifdef db_destroy
 //    print_db_fct("Object3D_destroy");
@@ -64,6 +65,7 @@ void Scene3D_destroy(Scene3D* scene){
 //    }
 //}
 
+/* iteratively  destroy an object */
 void Object3D_destroy(Object3D* obj){
 #ifdef db_destroy
     print_db_fct("Object3D_destroy");
@@ -348,7 +350,13 @@ Object3D* Object3D_create_cuboid(
     return cuboid;
 }
 
-
+/*
+ inputs: length, width,
+    axis (x,y,z) along which the quadraliteral is to be be parallel to
+    origin: the origin of the quad.
+ outputs: the 4 cordinates a,b, c,d  in 3d space of a quadrilateral
+ 
+ works for ANY quadrileteral */
 void Object3D_update_coords2(double x_dim, double y_dim, double z_dim, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
     double x = origin.x;
     double y = origin.y;
@@ -375,24 +383,38 @@ void Object3D_update_coords2(double x_dim, double y_dim, double z_dim, char axis
     }
 }
 
-void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
-    if (cur->next == NULL){ //this is ou
-        cur->next =  malloc(sizeof(Triangle3DNode));
-        cur->next->triangle.a = triangle.a;
-        cur->next->triangle.b = triangle.b;
-        cur->next->triangle.c = triangle.c;
-        cur->next->next = NULL;
-#ifdef db_o_append
-        printf("cur       = %p\n", cur);
-        printf("cur->next = %p\n", cur->next);
-        print_down_arrow();
-#endif
-        return;
-    }
-    else{
-        Object3D_append_triangle_helper(cur->next, triangle);
+/*
+ inputs: length, width,
+    axis (x,y,z) along which the quadraliteral is to be be parallel to
+    origin: the origin of the quad.
+ outputs: the 4 cordinates a,b, c,d  in 3d space of a quadrilateral
+ only words for perfect cubes */
+void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
+    double x = origin.x;
+    double y = origin.y;
+    double z = origin.z;
+    switch (axis){
+        case 'x':
+            *a = (Coordinate3D){x, y + width/2, z + length/2};
+            *b = (Coordinate3D){x, y - width/2, z + length/2};
+            *c = (Coordinate3D){x, y + width/2, z - length/2};
+            *d = (Coordinate3D){x, y - width/2, z - length/2};
+        break;
+        case 'y': //pyramid point is along the y axis
+            *a = (Coordinate3D){x + width/2, y , z + length/2};
+            *b = (Coordinate3D){x - width/2, y, z + length/2};
+            *c = (Coordinate3D){x + width/2, y, z - length/2};
+            *d = (Coordinate3D){x - width/2, y, z - length/2};
+        break;
+        case 'z':
+            *a = (Coordinate3D){x + width/2, y + length/2, z};
+            *b = (Coordinate3D){x - width/2, y + length/2, z};
+            *c = (Coordinate3D){x + width/2, y - length/2, z};
+            *d = (Coordinate3D){x - width/2, y - length/2, z};
+        break;
     }
 }
+
 /*
  This function should append a triangle to the Linked list of Triangle3DNode's within this object.
  *   Parameters:
@@ -420,7 +442,24 @@ void Object3D_append_triangle(Object3D* this, Triangle3D triangle){
     printf("coord c: ");Coordinate3D_db_print(this->root->triangle.c);
 #endif
 }
-
+void Object3D_append_triangle_helper(Triangle3DNode* cur, Triangle3D triangle){
+    if (cur->next == NULL){ //this is ou
+        cur->next =  malloc(sizeof(Triangle3DNode));
+        cur->next->triangle.a = triangle.a;
+        cur->next->triangle.b = triangle.b;
+        cur->next->triangle.c = triangle.c;
+        cur->next->next = NULL;
+#ifdef db_o_append
+        printf("cur       = %p\n", cur);
+        printf("cur->next = %p\n", cur->next);
+        print_down_arrow();
+#endif
+        return;
+    }
+    else{
+        Object3D_append_triangle_helper(cur->next, triangle);
+    }
+}
 /* tthis fct inserts a node at the front of a LL*/
 void Object3D_insert_triangle(Object3D* this, Triangle3D triangle){
     Triangle3DNode* head_tmp = this->root; //store root
@@ -438,8 +477,6 @@ void Object3D_insert_triangle(Object3D* this, Triangle3D triangle){
     
    
 }
-
-
 
 Triangle3DNode* Triangle3DNode_create_node(Triangle3D triangle){
     Triangle3DNode* this =  malloc(sizeof(Triangle3DNode));
@@ -477,36 +514,7 @@ void Object3D_append_quadrilateral(
 #endif
 }
 
-/*
- inputs: length, width,
-    axis (x,y,z) along which the quadraliteral is to be be parallel to
-    origin: the origin of the quad.
- outputs: the 4 cordinates a,b, c,d  in 3d space of a quadrilateral */
-void Object3D_update_coords(double length, double width, char axis, Coordinate3D origin, Coordinate3D* a, Coordinate3D* b, Coordinate3D* c, Coordinate3D* d){
-    double x = origin.x;
-    double y = origin.y;
-    double z = origin.z;
-    switch (axis){
-        case 'x':
-            *a = (Coordinate3D){x, y + width/2, z + length/2};
-            *b = (Coordinate3D){x, y - width/2, z + length/2};
-            *c = (Coordinate3D){x, y + width/2, z - length/2};
-            *d = (Coordinate3D){x, y - width/2, z - length/2};
-        break;
-        case 'y': //pyramid point is along the y axis
-            *a = (Coordinate3D){x + width/2, y , z + length/2};
-            *b = (Coordinate3D){x - width/2, y, z + length/2};
-            *c = (Coordinate3D){x + width/2, y, z - length/2};
-            *d = (Coordinate3D){x - width/2, y, z - length/2};
-        break;
-        case 'z':
-            *a = (Coordinate3D){x + width/2, y + length/2, z};
-            *b = (Coordinate3D){x - width/2, y + length/2, z};
-            *c = (Coordinate3D){x + width/2, y - length/2, z};
-            *d = (Coordinate3D){x - width/2, y - length/2, z};
-        break;
-    }
-}
+
 //helper fct for cuboid
 void Object3D_update_coord_for_depth(Coordinate3D in, double depth, Coordinate3D* out){
     (*out).x = in.x;
@@ -535,10 +543,20 @@ void Object3D_coord_shift(Coordinate3D in, char axis, double shamt, Coordinate3D
     }
 }
 
+/* for debugging*/
+void print_down_arrow(){
+    printf("\t\t|\n");
+    printf("\t\tV\n");
+}
+/* for debugging*/
+void print_db_fct(char* name){
+    printf("--------------- %s() ---------------\n", name);
+}
+/* for debugging*/
 void Coordinate3D_db_print(Coordinate3D coord){
     printf("(%.2f, %.2f, %.2f)", coord.x, coord.y, coord.z);
-    }
-
+}
+/* for debugging*/
 void Object3D_db_print(Object3D* obj){
     if (obj->root == NULL)
         printf("[empty]");
@@ -546,6 +564,7 @@ void Object3D_db_print(Object3D* obj){
         Object3D_db_print_helper(obj->root, 0);
     }
 }
+/* for debugging*/
 void Object3D_db_print_helper(Triangle3DNode* cur, int level){
     if (cur == NULL){
         return;
@@ -563,18 +582,11 @@ void Object3D_db_print_helper(Triangle3DNode* cur, int level){
     }
 }
 
-void print_down_arrow(){
-    printf("\t\t|\n");
-    printf("\t\tV\n");
-}
-
+/* print num*2 whitespaces*/
 void print_spaces(int num){
     for (int i = 0; i < num; i++){
         printf("  ");
     }
-}
-void print_db_fct(char* name){
-    printf("--------------- %s() ---------------\n", name);
 }
 
 
@@ -663,6 +675,7 @@ void write_spaces(int num, FILE* file){
     for (int i = 0; i < num; i++)
         fprintf(file, "  ");
 }
+
 void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
     if (cur == NULL){
         return;
@@ -683,6 +696,8 @@ void Object3D_write_helper(Triangle3DNode* cur, int level, FILE* file){
 void Coordinate3D_write(FILE* file, Coordinate3D coord){
     fprintf(file, "%.5f %.5f %.5f\n", coord.x, coord.y, coord.z);
 }
+
+/* check if a file exists*/
 int exists(const char *fname){
     FILE *file;
     if ((file = fopen(fname, "r")))
@@ -741,21 +756,22 @@ void Scene3D_write_stl_binary_triangle_count(Scene3D* scene, FILE* file){
     uint32_t count  = Scene3D_count_triangles(scene); //8B
     fwrite(&count,  sizeof(uint32_t), 1, file);
 }
-void Scene3D_write_stl_binary_facet(Scene3D* scene, FILE* file){
-    
-    
-}
+
+
 void Scene3D_write_stl_binary_normal(FILE* file){
     float zero=0;
     for (int i = 0; i < 3; i++)
         fwrite(&zero, 1, sizeof(float), file);
 }
+
 void Scene3D_write_stl_binary_scene(Scene3D* scene, FILE* file){
     for (int i = 0; i < scene->count; i++){
         Object3D_write_binary(scene->objects[i], file);
     }
 }
 
+/* write the coordinates (in binary) of each triangle node in an object
+ this is the recursive version. it works, except for fractal with level 7 and higher. */
 
 //void Object3D_write_binary(Object3D* obj, FILE* file){
 //    if (obj->root == NULL)
@@ -782,6 +798,9 @@ void Scene3D_write_stl_binary_scene(Scene3D* scene, FILE* file){
 //        Object3D_write_binary_helper(cur->next, level+1, file);
 //    }
 //}
+
+/* write the coordinates (in binary) of each triangle node in an object
+ this is the iterative version */
 void Object3D_write_binary(Object3D* obj, FILE* file){
     Triangle3DNode* cur = obj->root;
     for (int i = 0; i < obj->count; i++){
@@ -795,6 +814,7 @@ void Object3D_write_binary(Object3D* obj, FILE* file){
     }
 }
 
+/* write the nine, 4-byte floats representing the coordinates of the corners of the triangle.*/
 void Coordinate3D_write_binary(Coordinate3D coord, FILE* file){
     float x = (float)coord.x;
     float y = (float)coord.y;
@@ -894,6 +914,7 @@ Object3D* Object3D_create_sphere(Coordinate3D origin, double radius, double incr
     }
     return sphere;
 }
+
 /*
  convert a spherical coord to a cartesian one.
  inputs: origin, radius, theta, phi
@@ -912,10 +933,13 @@ void Object3D_spherical2cartesian(Coordinate3D origin, double radius, double the
     (*out).z = round_double((radius * cos(theta)) + origin.z  , 4);
 }
 
+
 double to_degrees(double in){
     double out = in*(PI/180);
     return out;
 }
+
+/* count the number of triangles in a scene */
 int Scene3D_count_triangles(Scene3D* this){
     int tot_tris = 0;
     for (int i = 0; i < this->count; i++){
@@ -923,10 +947,6 @@ int Scene3D_count_triangles(Scene3D* this){
     }
     return tot_tris;
 }
-
-
-/* append b to a like this: [a,b]
- */
 
 //void Object3D_append(Object3D* a, Object3D* b){
 //    Triangle3DNode* curr = b->root;
@@ -937,6 +957,8 @@ int Scene3D_count_triangles(Scene3D* this){
 //    Object3D_destroy(b);
 //}
 
+/* append b to a like this: [a,b]
+ */
 void Object3D_append(Object3D* a, Object3D* b){
     Triangle3DNode* curr = b->root;
     for (int i = 0; i < b->count; i++){
@@ -962,10 +984,25 @@ inputs:
     in, the number to be rounded
     precision: the number of decimals to round to
  output: the rounded number */
-double round_double(double in, int precision){    
-    double factor = pow(10,precision);
-    int a = (int)((in + (.5/factor)) * factor);
-    double res = (a/factor);
+//double round_double(double in, int precision){
+//    double in_temp = in;
+//    if (in < 0 )
+//        in = -in;
+//    double factor = pow(10,precision);
+//    int a = (int)((in + (.5/factor)) * factor);
+//    double res = (a/factor);
+//    if (in_temp < 0)
+//        return -res;
+//    return res;
+//}
+    
+double round_double(double x,  int digits) {
+    double fac = pow(10, digits);
+    double res = round(roundf(x*fac));
+    res = res/fac;
+    if (res == -0.0f){
+        res  = 0.0f;
+    }
     return res;
 }
     
