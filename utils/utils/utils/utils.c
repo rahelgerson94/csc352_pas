@@ -1,6 +1,6 @@
 #include "utils.h"
 #define debug
-
+/* *************** ARRAY: LENGTH ****************/
 int len_int(int arr[]){
     int i = 0;
     int len = 0;
@@ -421,6 +421,61 @@ int count_num_lines(char* path, int buff_size){
     return num_lines+1;
 }
 
+int get_max_line_len(char* path){
+/* given a path to a file, finds the longest line in the file
+ returns the length of the longest line in a file.
+ length excludes newline char */
+    FILE* data = fopen(path, "r");
+    char curr_data[2];
+    int num_lines = 0;
+    int max_num_char = 0;
+    int curr_num_char = 0;
+//    printf("<\n");
+    while(fgets(curr_data, 2, data) != NULL){
+//        printf(">%s<\n",curr_data);
+        if (strcmp(curr_data,"\n") == 0 || strcmp(curr_data,"\0") == 0){
+            num_lines++;
+            if (curr_num_char > max_num_char) max_num_char = curr_num_char;
+            curr_num_char = 0;
+        }else{
+            curr_num_char++;
+        }
+    }
+    fclose(data);
+//    printf(">");
+    return max_num_char;
+}
+
+void read_(char* path, int buff_size, char* arr[]){
+/* populate arr w/ contents of file_data.
+ buff_size: number of bytes fgets() will read.
+ arr is an out param */
+
+    int max_len = get_max_line_len(path);
+    int cur_len;
+    FILE* in = fopen(path, "r");
+    char curr_in[max_len+1];
+    reset_char_arr(curr_in, 0, max_len);
+    int i = 0;
+    while(fgets(curr_in, max_len+1, in)){ //+1 for new line
+        cur_len = len_char(curr_in);
+        curr_in[cur_len] = '\0';
+        //printf("%d\t", cur_len);
+        if (cur_len == 0)
+            continue;
+        else{
+            arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
+            strcpy(arr[i], curr_in);
+            arr[i][cur_len]  = '\0';
+            //printf(">%s<\n", arr[i]);
+            reset_char_arr(curr_in, 0, max_len);
+            i++;
+        }
+        
+    }
+    fclose(in);
+}
+
 /* *************** STRING OPERATIONS ****************/
 
 int find_substr(char input[], char search[], int ind){
@@ -519,8 +574,6 @@ int index_(char base[], char to_search[]){
 }
 
 
-
-
 void str_append(char** base, char* to_append){
 /* copies to_append into base, without deleting to_append */
 
@@ -540,7 +593,6 @@ void str_append(char** base, char* to_append){
     free(*base);
     *base = new_str;
 }
-
 
 
 
@@ -583,58 +635,4 @@ int* line_lengths(char* path, int buff_size){
     return out;
 }
 
-int get_max_line_len(char* path){
-/* given a path to a file, finds the longest line in the file
- returns the length of the longest line in a file.
- length excludes newline char */
-    FILE* data = fopen(path, "r");
-    char curr_data[2];
-    int num_lines = 0;
-    int max_num_char = 0;
-    int curr_num_char = 0;
-//    printf("<\n");
-    while(fgets(curr_data, 2, data) != NULL){
-//        printf(">%s<\n",curr_data);
-        if (strcmp(curr_data,"\n") == 0 || strcmp(curr_data,"\0") == 0){
-            num_lines++;
-            if (curr_num_char > max_num_char) max_num_char = curr_num_char;
-            curr_num_char = 0;
-        }else{
-            curr_num_char++;
-        }
-    }
-    fclose(data);
-//    printf(">");
-    return max_num_char;
-}
 
-
-void read_(char* path, int buff_size, char* arr[]){
-/* populate arr w/ contents of file_data.
- buff_size: number of bytes fgets() will read.
- arr is an out param */
-
-    int max_len = get_max_line_len(path);
-    int cur_len;
-    FILE* in = fopen(path, "r");
-    char curr_in[max_len+1];
-    reset_char_arr(curr_in, 0, max_len);
-    int i = 0;
-    while(fgets(curr_in, max_len+1, in)){ //+1 for new line
-        cur_len = len_char(curr_in);
-        curr_in[cur_len] = '\0';
-        //printf("%d\t", cur_len);
-        if (cur_len == 0)
-            continue;
-        else{
-            arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
-            strcpy(arr[i], curr_in);
-            arr[i][cur_len]  = '\0';
-            //printf(">%s<\n", arr[i]);
-            reset_char_arr(curr_in, 0, max_len);
-            i++;
-        }
-        
-    }
-    fclose(in);
-}
