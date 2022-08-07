@@ -1,0 +1,12 @@
+10
+does it have 4 legs?,does it have wheels?,does it have a motor?,does it have fur?
+car,0,1,1,0
+fox,1,0,0,1
+elephant,1,0,0,0
+trailer,0,1,0,0
+tarantula,0,0,0,1
+mirror,0,0,0,0
+work bench,1,1,0,0
+standing desk,1,1,1,0
+bear,1,0,0,1
+lion,1,0,0,1
