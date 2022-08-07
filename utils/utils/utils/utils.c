@@ -1,5 +1,6 @@
 #include "utils.h"
 #define debug
+
 int len_int(int arr[]){
     int i = 0;
     int len = 0;
@@ -66,8 +67,6 @@ void reset_long_arr(long arr[], int start, int end, int val)
         arr[i] = val;
     }
 }
-
-
 void reset_float_arr(float arr[], int start, int end, int val)
 {
     for (int i = start; i < end; i++)
@@ -110,6 +109,11 @@ bool is_digit(char c){
     else return false;
 }
 
+void print_spaces(int num_spaces){
+    for (int i = 0; i < num_spaces; i++){
+        printf(" ");
+    }
+}
 
 void print_int_arr(int arr[])
 {
@@ -132,8 +136,6 @@ void print_int_arr(int arr[])
 void print_int_ptr_arr(int* arr[], int length)
 {
     printf("{ ");
-    
-
     for (int i = 0; i < length; i++)
     {
         if (i == length - 1)
@@ -147,7 +149,7 @@ void print_int_ptr_arr(int* arr[], int length)
         }
     }
 }
-
+/* *************** ARRAY: COPY ****************/
 void intcpy_(int dst[], int src[], int out_start, int in_start, int in_end)
 {
     int len = in_end - in_start;
@@ -189,6 +191,8 @@ void longcpy_(long dst[], long src[], int out_start, int in_start, int in_end)
         in_i++;
     }
 }
+
+/* *************** ARRAY: CONVERT STRING TO NUMERICAL ****************/
 
 void str2long_list(char input[], long output[]){
     int Start = 0;
@@ -295,6 +299,7 @@ int expandListLong(char input[], long output[]){
     return ll;
 }
 
+/* atoi: only does single chars*/
 int char2num(char Input)
 {
     int out = Input - '0';
@@ -313,7 +318,7 @@ int checkCharLoc(char input[],char b){
     }
     return -1;
 }
-
+/* converts (char)25 into int(25) */
 int combineElements(char arr[], int cc){
     int nums[100] = {-1};
 
@@ -344,6 +349,8 @@ int combineElements(char arr[], int cc){
     return out;
 }
 
+/* *************** DATA: PROCESSING ****************/
+
 void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int output[]){
     if (endLoc == -1)
     {
@@ -363,6 +370,58 @@ void get_separation_locs(char input[], char delim, int startLoc, int endLoc, int
         }
     }
 }
+
+void delimit(char line[], char delim, char* output[]){
+/*
+ inputs: a delim-delimited string,
+     delim: the delimiter
+        eg: line = "dog, fish, girl"
+            delim = ','
+ outtputs: [dog,  fish, girl]
+ REMEBER TO FREE AT THE END!!! */
+    int num_lines = count_char(line, delim)+1;
+    int start, end;
+    
+    int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
+    get_separation_locs(line, delim, 0, strlen(line), delim_locs);
+    
+    start = 0;
+    end = delim_locs[0];
+    int curr_size = end - start + 1; //includes space for null char
+    output[0] = calloc(curr_size, sizeof(char));
+    strcpy_(output[0], line, 0, start, end );
+    printf("%s\n", output[0]);
+    
+    for (int l = 1; l < num_lines; l++){
+        if (l == num_lines-1){
+            start = delim_locs[l-1]+1;
+            end = strlen(line);
+        }
+        else{
+            end = delim_locs[l];
+            start = delim_locs[l-1]+1;
+        }
+        curr_size = end - start + 1;
+        output[l] = calloc(curr_size, sizeof(char));
+        strcpy_(output[l], line, 0, start, end);
+        //printf("%s\n", output[l]);
+    }
+}
+
+int count_num_lines(char* path, int buff_size){
+/* count the number of lines in a file
+ buff_size : max bytes/chars to read (for fgets) */
+    FILE* data = fopen(path, "r");
+    char curr_data[buff_size];
+    int num_lines = 0;
+    while(fgets(curr_data, buff_size, data) != NULL){
+        num_lines+=count_char(curr_data, '\n');
+    }
+    fclose(data);
+    return num_lines+1;
+}
+
+/* *************** STRING OPERATIONS ****************/
 
 int find_substr(char input[], char search[], int ind){
     /* return the index in input where search appears
@@ -391,6 +450,7 @@ int find_substr(char input[], char search[], int ind){
     }
     return -1;
 }
+
 /* return the number of times search appears in input*/
 int count_char(char input[], char search){
     int ind = 0;
@@ -429,13 +489,11 @@ int count_substr(char base[], char to_search[]){
 }
 
 
-
-//int         (char input[], char search[], int ind){
 int index_(char base[], char to_search[]){
-    /* return the index in base where search appears
-     ex: if base = blafishes, to_search = fis,
-     out should be 3
-     */
+/* return the index in base where search appears
+ ex: if base = blafishes, to_search = fis,
+ out should be 3
+ */
     int ind = 0;
     int ll = 0; //iterator for the search term
     int out = ind;
@@ -459,44 +517,14 @@ int index_(char base[], char to_search[]){
     }
     return -1;
 }
-void print_spaces(int num_spaces){
-    for (int i = 0; i < num_spaces; i++){
-        printf(" ");
-    }
-}
-void delimit(char line[], char delim, char* output[]){
-    int num_lines = count_char(line, delim)+1;
-    int start, end;
-    
-    int delim_locs[num_lines];reset_int_arr(delim_locs, 0, num_lines, -1);
-    get_separation_locs(line, delim, 0, strlen(line), delim_locs);
-    
-    start = 0;
-    end = delim_locs[0];
-    int curr_size = end - start + 1; //includes space for null char
-    output[0] = calloc(curr_size, sizeof(char));
-    strcpy_(output[0], line, 0, start, end );
-    printf("%s\n", output[0]);
-    
-    for (int l = 1; l < num_lines; l++){
-        if (l == num_lines-1){
-            start = delim_locs[l-1]+1;
-            end = strlen(line);
-        }
-        else{
-            end = delim_locs[l];
-            start = delim_locs[l-1]+1;
-        }
-        curr_size = end - start + 1;
-        output[l] = calloc(curr_size, sizeof(char));
-        strcpy_(output[l], line, 0, start, end);
-        //printf("%s\n", output[l]);
-    }
-}
+
+
+
 
 void str_append(char** base, char* to_append){
+/* copies to_append into base, without deleting to_append */
+
     int base_data_len,  to_append_data_len;
-    int base_tot, to_append_tot;
     base_data_len = len_char(*base);
     to_append_data_len = len_char(to_append);
     /*combine the data fields*/
@@ -513,89 +541,10 @@ void str_append(char** base, char* to_append){
     *base = new_str;
 }
 
-/* count the number of lines in a file */
-int count_num_lines(char* path, int buff_size){
-    FILE* data = fopen(path, "r");
-    char curr_data[buff_size];
-    int num_lines = 0;
-    while(fgets(curr_data, buff_size, data) != NULL){
-        num_lines+=count_char(curr_data, '\n');
-    }
-    fclose(data);
-    return num_lines+1;
-}
 
 
 
-//char** read_(char* path, int buff_size){
-//int num_lines = count_num_lines(path, buff_size);
-//char** out = malloc(sizeof(char*)* (num_lines+1));
-//    for (int i = 0; i < num_lines+1; i++){
-//        printf("\tout[%d]\n", i);  //db
-//        out[i] = NULL;
-//    }
-//    FILE* in = fopen(path, "r");
-//    char curr_data[buff_size]; reset_char_arr(curr_data, 0, buff_size);
-//    int l = 0;
-//    int len_new = buff_size;
-//    int iter0 = 0; //db
-//    while(fgets(curr_data, buff_size, in) != NULL){
-//
-//        if (out[l] == NULL){
-//            out[l] = calloc(sizeof(char), len_new);
-//            int new_line_loc =  checkCharLoc(curr_data, '\n');
-//            if (new_line_loc >=0){
-//                curr_data[new_line_loc] = '\0';
-//                strcpy(out[l], curr_data);
-//                printf("out[%d] = >%s< \n", l, out[l]);
-//                l++;
-//            }
-//            else{
-//                strcpy(out[l], curr_data);
-//                printf("out[%d] = >%s< \n", l, out[l]);
-//            }
-//        }
-//        else{
-//            printf("curr_data=%s\n", curr_data);
-//            len_new = len_new + len_char(curr_data) + 1;
-//            char temp[len_new];
-//            reset_char_arr(temp, 0, len_new);
-//            strcpy(temp, out[l]); //temp = out[l]
-//
-//            printf("\t%d. realloc(), l = %d \n", iter0, l);  //db
-//            out[l] = realloc(out[l], len_new);
-//            reset_char_arr(out[l], 0, len_new);
-//            strcpy(out[l], temp); //temp = out[l]
-//
-//            if (count_char(curr_data, '\n') > 0){
-//                //printf("curr_data:>%s<\n", curr_data);
-//                int new_line_loc =  checkCharLoc(curr_data, '\n');
-//                curr_data[new_line_loc] = '\0';
-//                printf("before strcat: out[%d] = >%s< \n", l, out[l]);
-//
-//                strncat(out[l], curr_data, len_new+1);
-//                printf("after strcat: out[%d] = >%s< \n", l, out[l]);
-//                printf("len: %d", len_new);
-//                //printf("%d. %s\n", l, out[l]);
-//                //printf("%s\n", out[l]);
-//                len_new = buff_size;
-//                l++;
-//            }
-//            else{
-//                printf("\tlen_char(out[l]) = %d",len_char(out[l]));
-//                strncat(out[l], curr_data, len_char(out[l]) + 1);
-//                //printf("%d. %s\n", l, out[l]);
-//            }
-//        }
-//        iter0++;
-//    }
-//    fclose(in);
-//    return out;
-//}
-
-
-
- 
+/* unsure if this works*/
 int* line_lengths(char* path, int buff_size){
     int num_lines = count_num_lines(path, buff_size);
     int* out = malloc(num_lines*sizeof(int)  + 1);
@@ -635,8 +584,9 @@ int* line_lengths(char* path, int buff_size){
 }
 
 int get_max_line_len(char* path){
-    /* returns the length of the longest line in a file
-     length excludes newline char */
+/* given a path to a file, finds the longest line in the file
+ returns the length of the longest line in a file.
+ length excludes newline char */
     FILE* data = fopen(path, "r");
     char curr_data[2];
     int num_lines = 0;
@@ -658,31 +608,12 @@ int get_max_line_len(char* path){
     return max_num_char;
 }
 
-//char** read_(char* path, int buff_size){
-//    int num_lines = count_num_lines(path, buff_size);
-//    int max_len = get_max_line_len(path);
-//    char** file_data = malloc(sizeof(char*) * )
-//    FILE* in = fopen(path, "r");
-//    char curr_in[max_len+1];
-//    reset_char_arr(curr_in, 0, max_len);
-//    int i = 0;
-//    while(fgets(curr_in, max_len, in)){
-//        int cur_len = len_char(curr_in);
-//        file_data[i] = malloc(sizeof(char)*(cur_len+1));
-//        curr_in[cur_len] = '\0';
-//        strcpy(file_data[i], curr_in);
-//        i++;
-//    }
-//    fclose(in);
-//    return file_data;
-//}
-
 
 void read_(char* path, int buff_size, char* arr[]){
-    /* populate arr w/ contents of file_data.
-     arr is an out param */
-    
-    //int num_lines = count_num_lines(path, buff_size);
+/* populate arr w/ contents of file_data.
+ buff_size: number of bytes fgets() will read.
+ arr is an out param */
+
     int max_len = get_max_line_len(path);
     int cur_len;
     FILE* in = fopen(path, "r");
