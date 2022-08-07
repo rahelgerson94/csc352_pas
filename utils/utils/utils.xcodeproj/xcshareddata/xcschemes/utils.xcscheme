@@ -53,6 +53,10 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "/Users/rahelmizrahi/Library/Mobile_Documents/com~apple~CloudDocs/csc352/cs352_pas/utils/utils/utils/stock_data.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/rahelmizrahi/Downloads/text.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

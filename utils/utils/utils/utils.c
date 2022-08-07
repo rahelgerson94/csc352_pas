@@ -457,17 +457,20 @@ void read_(char* path, int buff_size, char* arr[]){
     char curr_in[max_len+1];
     reset_char_arr(curr_in, 0, max_len);
     int i = 0;
-    while(fgets(curr_in, max_len+1, in)){ //+1 for new line
+    while(fgets(curr_in, max_len+1, in) != NULL){ //+1 for new line
         cur_len = len_char(curr_in);
         curr_in[cur_len] = '\0';
-        //printf("%d\t", cur_len);
-        if (cur_len == 0)
+        
+        if (cur_len == 0){
+            printf("%d\t NULL\n", cur_len); //debug
             continue;
+        }
         else{
+            printf("%d\t", cur_len);
             arr[i] = malloc(sizeof(char)*(cur_len+1)); //+1 for null char,
             strcpy(arr[i], curr_in);
             arr[i][cur_len]  = '\0';
-            //printf(">%s<\n", arr[i]);
+            printf(">%s<\n", arr[i]);
             reset_char_arr(curr_in, 0, max_len);
             i++;
         }

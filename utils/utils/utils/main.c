@@ -15,6 +15,7 @@ int main(int argc, const char * argv[]) {
     int num_lines = count_num_lines(path, buff_size);
     char* file_data[num_lines];
     read_( path, buff_size, file_data);
+    printf("\nmain()\n");
     for (int i = 0; i < num_lines; i++){
         printf("%d. >%s<\n", i, file_data[i]);
     }
