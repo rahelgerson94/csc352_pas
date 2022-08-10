@@ -19,8 +19,8 @@ int main(int argc, const char * argv[]) {
     for (int i = 0; i < num_lines; i++){
         printf("%d. >%s<\n", i, file_data[i]);
     }
-    
-    for (int i = 0; i < num_lines; i++)
-        free(file_data[i]);
+    free_data(file_data, num_lines);
+//    for (int i = 0; i < num_lines; i++)
+//        free(file_data[i]);
     return 0;
 }

@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <stdbool.h>
 #include <string.h>
@@ -60,4 +61,9 @@ int get_max_line_len(char* path);
 int* line_lengths(char* path, int buff_size); //alloc'd, but not sure if works
 //char** read_(char* path, int buff_size);
 void read_(char* path, int buff_size, char* arr[]);
+void free_data(char* data[], int num_lines);
+/* BIT-LEVEL FUNCTIONS */
+void print_bits(void* loc, int size);
+int get_last_digit(uint16_t num);
+uint64_t convert_to_base(uint64_t num, uint8_t base);
 #endif /* utils_h */

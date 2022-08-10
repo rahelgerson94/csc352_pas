@@ -1,4 +1,22 @@
 #include "utils.h"
+/* *************** DEBUG FUNCTIONS ****************/
+#define db_mode
+#ifdef db_mode
+    #define DB_PRINT_NUM(NUM)\
+        printf("%d\n", NUM);
+    
+    #define DB_PRINT_FCT(FCT_NAME)\
+        printf("--------------------- %s ---------------------\n",FCT_NAME );
+
+    #define DB_PRINT_STRING(STRING)\
+        printf("%s\n",STRING );
+#else
+    #define DB_PRINT_NUM(NUM)
+    #define DB_PRINT_FCT(FCT_NAME)
+    #define DB_PRINT_STRING(STRING)
+#endif
+
+
 #define debug
 /* *************** ARRAY: LENGTH ****************/
 int len_int(int arr[]){
@@ -638,4 +656,56 @@ int* line_lengths(char* path, int buff_size){
     return out;
 }
 
+/* BIT-LEVEL FUNCTIONS */
+void print_bits(void * loc, int num_bytes){
+    /*
+     loc: the address of a number, it's not an array!
+     size: number of bytes in loc*/
+    uint8_t* data = (uint8_t*) loc;
+    uint8_t temp;
+    for (int byte = 0; byte < num_bytes; byte++){ //for each byte in data
+        for (int bit = 0; bit < 8; bit++){ //for each bit in byte
+            temp = data[byte] << (7- bit); //shift the bit-th LSB bit to MSB loc. (bit 0)
+            temp = temp >> 7; //shift the MSB to the LSB loc, zero out all other bits.
+            if (temp == 1)
+                printf("1");
+            else if (temp == 0)
+                printf("0");
+//            else
+//                printf("%hhu", temp);
+            
+        }
+        printf(" "); //space between each byte
+    }
+    printf("\n");
+}
+
+int get_last_digit(uint16_t num){
+    uint16_t first = num;
+    /* Remove last digit from number till only one digit is left */
+    while(first >= 10)
+        first = first / 10;
+    return  first;
+}
+
+
+uint64_t convert_to_base(uint64_t num, uint8_t base){
+    uint64_t new_base_num = 0;
+    int i = 1;
+    int remainder;
+    while(num != 0){
+        remainder = num % base;
+        num = num / base;
+        new_base_num = new_base_num + (remainder * i);
+        i = i * 10;
+    }
+    return new_base_num;
+}
+
+/* frees the data structure created by read_( )*/
+void free_data(char* data[], int num_lines){
+    for (int i = 0; i < num_lines; i++)
+        free(data[i]);
+    
+}
 
